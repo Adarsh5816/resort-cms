@@ -1,10 +1,31 @@
 -- ============================================================
--- SUPABASE POSTGRESQL DATABASE MIGRATION & LEXUR GREEN SEED
--- Paste this script into Supabase SQL Editor (https://supabase.com)
+-- SUPABASE POSTGRESQL DATABASE MIGRATION & SEED FOR RESORT CMS
+-- Copy EVERYTHING in this file (Ctrl+A -> Ctrl+C)
+-- Open Supabase SQL Editor -> Create New Query -> Paste & Click RUN
 -- ============================================================
 
+-- Clean up existing tables if re-running
+DROP TABLE IF EXISTS enquiries CASCADE;
+DROP TABLE IF EXISTS social_links CASCADE;
+DROP TABLE IF EXISTS contact_information CASCADE;
+DROP TABLE IF EXISTS testimonials CASCADE;
+DROP TABLE IF EXISTS restaurant_items CASCADE;
+DROP TABLE IF EXISTS attractions CASCADE;
+DROP TABLE IF EXISTS experiences CASCADE;
+DROP TABLE IF EXISTS gallery_images CASCADE;
+DROP TABLE IF EXISTS gallery_categories CASCADE;
+DROP TABLE IF EXISTS room_amenities CASCADE;
+DROP TABLE IF EXISTS amenities CASCADE;
+DROP TABLE IF EXISTS room_images CASCADE;
+DROP TABLE IF EXISTS rooms CASCADE;
+DROP TABLE IF EXISTS homepage_sections CASCADE;
+DROP TABLE IF EXISTS theme_settings CASCADE;
+DROP TABLE IF EXISTS website_settings CASCADE;
+DROP TABLE IF EXISTS users CASCADE;
+DROP TABLE IF EXISTS resorts CASCADE;
+
 -- 1. Resorts Table
-CREATE TABLE IF NOT EXISTS resorts (
+CREATE TABLE resorts (
   id VARCHAR(36) PRIMARY KEY,
   name VARCHAR(255) NOT NULL,
   slug VARCHAR(255) UNIQUE NOT NULL,
@@ -15,7 +36,7 @@ CREATE TABLE IF NOT EXISTS resorts (
 );
 
 -- 2. Users Table
-CREATE TABLE IF NOT EXISTS users (
+CREATE TABLE users (
   id VARCHAR(36) PRIMARY KEY,
   email VARCHAR(255) UNIQUE NOT NULL,
   password_hash VARCHAR(255) NOT NULL,
@@ -26,7 +47,7 @@ CREATE TABLE IF NOT EXISTS users (
 );
 
 -- 3. Website Settings & SEO
-CREATE TABLE IF NOT EXISTS website_settings (
+CREATE TABLE website_settings (
   id VARCHAR(36) PRIMARY KEY,
   resort_id VARCHAR(36) UNIQUE REFERENCES resorts(id) ON DELETE CASCADE,
   logo_url TEXT,
@@ -45,7 +66,7 @@ CREATE TABLE IF NOT EXISTS website_settings (
 );
 
 -- 4. Theme Settings Table
-CREATE TABLE IF NOT EXISTS theme_settings (
+CREATE TABLE theme_settings (
   id VARCHAR(36) PRIMARY KEY,
   resort_id VARCHAR(36) UNIQUE REFERENCES resorts(id) ON DELETE CASCADE,
   theme_id VARCHAR(50) NOT NULL DEFAULT 'lexur-forest',
@@ -60,7 +81,7 @@ CREATE TABLE IF NOT EXISTS theme_settings (
 );
 
 -- 5. Homepage Sections
-CREATE TABLE IF NOT EXISTS homepage_sections (
+CREATE TABLE homepage_sections (
   id VARCHAR(36) PRIMARY KEY,
   resort_id VARCHAR(36) REFERENCES resorts(id) ON DELETE CASCADE,
   section_key VARCHAR(50) NOT NULL,
@@ -73,7 +94,7 @@ CREATE TABLE IF NOT EXISTS homepage_sections (
 );
 
 -- 6. Rooms Table
-CREATE TABLE IF NOT EXISTS rooms (
+CREATE TABLE rooms (
   id VARCHAR(36) PRIMARY KEY,
   resort_id VARCHAR(36) REFERENCES resorts(id) ON DELETE CASCADE,
   name VARCHAR(255) NOT NULL,
@@ -92,7 +113,7 @@ CREATE TABLE IF NOT EXISTS rooms (
 );
 
 -- 7. Room Images Table
-CREATE TABLE IF NOT EXISTS room_images (
+CREATE TABLE room_images (
   id VARCHAR(36) PRIMARY KEY,
   room_id VARCHAR(36) REFERENCES rooms(id) ON DELETE CASCADE,
   image_url TEXT NOT NULL,
@@ -101,7 +122,7 @@ CREATE TABLE IF NOT EXISTS room_images (
 );
 
 -- 8. Amenities Table
-CREATE TABLE IF NOT EXISTS amenities (
+CREATE TABLE amenities (
   id VARCHAR(36) PRIMARY KEY,
   resort_id VARCHAR(36) REFERENCES resorts(id) ON DELETE CASCADE,
   name VARCHAR(255) NOT NULL,
@@ -113,21 +134,21 @@ CREATE TABLE IF NOT EXISTS amenities (
 );
 
 -- 9. Room Amenities Junction
-CREATE TABLE IF NOT EXISTS room_amenities (
+CREATE TABLE room_amenities (
   room_id VARCHAR(36) REFERENCES rooms(id) ON DELETE CASCADE,
   amenity_id VARCHAR(36) REFERENCES amenities(id) ON DELETE CASCADE,
   PRIMARY KEY (room_id, amenity_id)
 );
 
 -- 10. Gallery Categories & Images
-CREATE TABLE IF NOT EXISTS gallery_categories (
+CREATE TABLE gallery_categories (
   id VARCHAR(36) PRIMARY KEY,
   resort_id VARCHAR(36) REFERENCES resorts(id) ON DELETE CASCADE,
   name VARCHAR(255) NOT NULL,
   display_order INT DEFAULT 0
 );
 
-CREATE TABLE IF NOT EXISTS gallery_images (
+CREATE TABLE gallery_images (
   id VARCHAR(36) PRIMARY KEY,
   resort_id VARCHAR(36) REFERENCES resorts(id) ON DELETE CASCADE,
   category_id VARCHAR(36) REFERENCES gallery_categories(id) ON DELETE SET NULL,
@@ -138,7 +159,7 @@ CREATE TABLE IF NOT EXISTS gallery_images (
 );
 
 -- 11. Experiences Table
-CREATE TABLE IF NOT EXISTS experiences (
+CREATE TABLE experiences (
   id VARCHAR(36) PRIMARY KEY,
   resort_id VARCHAR(36) REFERENCES resorts(id) ON DELETE CASCADE,
   title VARCHAR(255) NOT NULL,
@@ -152,7 +173,7 @@ CREATE TABLE IF NOT EXISTS experiences (
 );
 
 -- 12. Attractions Table
-CREATE TABLE IF NOT EXISTS attractions (
+CREATE TABLE attractions (
   id VARCHAR(36) PRIMARY KEY,
   resort_id VARCHAR(36) REFERENCES resorts(id) ON DELETE CASCADE,
   name VARCHAR(255) NOT NULL,
@@ -165,7 +186,7 @@ CREATE TABLE IF NOT EXISTS attractions (
 );
 
 -- 13. Restaurant Items Table
-CREATE TABLE IF NOT EXISTS restaurant_items (
+CREATE TABLE restaurant_items (
   id VARCHAR(36) PRIMARY KEY,
   resort_id VARCHAR(36) REFERENCES resorts(id) ON DELETE CASCADE,
   name VARCHAR(255) NOT NULL,
@@ -179,7 +200,7 @@ CREATE TABLE IF NOT EXISTS restaurant_items (
 );
 
 -- 14. Testimonials Table
-CREATE TABLE IF NOT EXISTS testimonials (
+CREATE TABLE testimonials (
   id VARCHAR(36) PRIMARY KEY,
   resort_id VARCHAR(36) REFERENCES resorts(id) ON DELETE CASCADE,
   customer_name VARCHAR(255) NOT NULL,
@@ -193,7 +214,7 @@ CREATE TABLE IF NOT EXISTS testimonials (
 );
 
 -- 15. Contact Information Table
-CREATE TABLE IF NOT EXISTS contact_information (
+CREATE TABLE contact_information (
   id VARCHAR(36) PRIMARY KEY,
   resort_id VARCHAR(36) UNIQUE REFERENCES resorts(id) ON DELETE CASCADE,
   phone VARCHAR(50),
@@ -210,7 +231,7 @@ CREATE TABLE IF NOT EXISTS contact_information (
 );
 
 -- 16. Social Links Table
-CREATE TABLE IF NOT EXISTS social_links (
+CREATE TABLE social_links (
   id VARCHAR(36) PRIMARY KEY,
   resort_id VARCHAR(36) REFERENCES resorts(id) ON DELETE CASCADE,
   platform VARCHAR(50) NOT NULL,
@@ -218,7 +239,7 @@ CREATE TABLE IF NOT EXISTS social_links (
 );
 
 -- 17. Enquiries Table
-CREATE TABLE IF NOT EXISTS enquiries (
+CREATE TABLE enquiries (
   id VARCHAR(36) PRIMARY KEY,
   resort_id VARCHAR(36) REFERENCES resorts(id) ON DELETE CASCADE,
   guest_name VARCHAR(255) NOT NULL,
@@ -239,13 +260,11 @@ CREATE TABLE IF NOT EXISTS enquiries (
 -- ============================================================
 
 INSERT INTO resorts (id, name, slug, custom_domain, status)
-VALUES ('lexur-resort-001', 'Lexur Green Serviced Villa', 'lexur-green', 'www.lexurbooking.in', 'active')
-ON CONFLICT (id) DO NOTHING;
+VALUES ('lexur-resort-001', 'Lexur Green Serviced Villa', 'lexur-green', 'www.lexurbooking.in', 'active');
 
 -- Akash Valluvady Admin (Password: 8606778603 -> bcrypt hash)
 INSERT INTO users (id, email, password_hash, name, role, resort_id)
-VALUES ('user-akash-001', 'akashvalluvady@gmail.com', '$2a$10$tMhM6c.qN2p/P2b23K03ee.12G.K6p73D0R8p7K63.M6p73D0R8p7', 'Akash Valluvady', 'RESORT_ADMIN', 'lexur-resort-001')
-ON CONFLICT (email) DO NOTHING;
+VALUES ('user-akash-001', 'akashvalluvady@gmail.com', '$2a$10$22tB8oB.0eQZcT412XkHie11S8rU26zZ0jT0p50bK12.k.L.x1mpy', 'Akash Valluvady', 'RESORT_ADMIN', 'lexur-resort-001');
 
 -- Website Settings & SEO
 INSERT INTO website_settings (id, resort_id, tagline, short_description, full_description, meta_title, meta_description, keywords, restaurant_enabled)
@@ -258,12 +277,11 @@ VALUES (
   'Book your stay at Lexur Green Serviced Villa, Valluvady Wayanad. 3BHK Private Villa, Night Jungle Safari, kitchen, homely food & forest views.',
   'lexur green, wayanad serviced villa, valluvady villa, night jungle safari wayanad, 3bhk villa wayanad, homely food stay',
   TRUE
-) ON CONFLICT (resort_id) DO NOTHING;
+);
 
 -- Theme Settings
 INSERT INTO theme_settings (id, resort_id, theme_id, primary_color, secondary_color, accent_color)
-VALUES ('ts-lexur-001', 'lexur-resort-001', 'lexur-forest', '#0A2E1C', '#0F3822', '#2E7D52')
-ON CONFLICT (resort_id) DO NOTHING;
+VALUES ('ts-lexur-001', 'lexur-resort-001', 'lexur-forest', '#0A2E1C', '#0F3822', '#2E7D52');
 
 -- Homepage Sections
 INSERT INTO homepage_sections (id, resort_id, section_key, title, subtitle, is_enabled, display_order)
@@ -276,10 +294,9 @@ VALUES
   ('sec-6', 'lexur-resort-001', 'gallery', 'Forest & Villa Gallery', 'Immerse in Lush Wayanad Greenery', TRUE, 6),
   ('sec-7', 'lexur-resort-001', 'restaurant', 'Homely Food on Order', 'Authentic Kerala Cooking', TRUE, 7),
   ('sec-8', 'lexur-resort-001', 'testimonials', 'Guest Experiences', 'Memories from Forest Border', TRUE, 8),
-  ('sec-9', 'lexur-resort-001', 'contact', 'Reserve Your Stay at Lexur Green', 'Valluvady, Wayanad, Kerala', TRUE, 9)
-ON CONFLICT (id) DO NOTHING;
+  ('sec-9', 'lexur-resort-001', 'contact', 'Reserve Your Stay at Lexur Green', 'Valluvady, Wayanad, Kerala', TRUE, 9);
 
--- Contact Information (Exact details from GoDaddy & Business Card)
+-- Contact Information
 INSERT INTO contact_information (id, resort_id, phone, whatsapp_number, email, address, google_maps_url)
 VALUES (
   'ci-lexur-001', 'lexur-resort-001',
@@ -287,4 +304,4 @@ VALUES (
   'lexurbooking@gmail.com',
   'Valluvady, Sulthan Bathery, Wayanad, Kerala, India',
   'https://maps.google.com/?q=Valluvady+Wayanad'
-) ON CONFLICT (resort_id) DO NOTHING;
+);
