@@ -44,17 +44,17 @@ This guide shows how to deploy **Lexur Green Serviced Villa** (`www.lexurbooking
 1. Go to [https://render.com](https://render.com) and sign up for a **Free Account**.
 2. Click **New +** $\rightarrow$ **Web Service** $\rightarrow$ Connect your `Adarsh5816/resort-cms` GitHub repository.
 3. Settings:
-   - **Name**: `lexur-api`
+   - **Name**: `resort-cms-api`
    - **Root Directory**: `server`
    - **Environment**: `Node`
    - **Build Command**: `npm install && npm run build`
    - **Start Command**: `npm start`
 4. Add **Environment Variables**:
    - `DATABASE_URL`: *(Paste your Supabase Connection String from Step 1)*
-   - `JWT_SECRET`: `lexur-green-super-secret-key-2026`
+   - `JWT_SECRET`: `resort-cms-super-secret-key-2026`
    - `NODE_ENV`: `production`
 5. Click **Create Web Service**. Render will deploy your Express backend and provide a free URL, e.g.:
-   `https://lexur-api.onrender.com`
+   `https://resort-cms-api.onrender.com`
 
 ---
 
@@ -71,7 +71,7 @@ This guide shows how to deploy **Lexur Green Serviced Villa** (`www.lexurbooking
    - **Build Command**: `npm run build`
    - **Build Output Directory**: `dist`
 5. Add **Environment Variable**:
-   - `VITE_API_URL`: `https://lexur-api.onrender.com` *(Your Render API URL from Step 3)*
+   - `VITE_API_URL`: `https://resort-cms-api.onrender.com` *(Your Render API URL from Step 3)*
 6. Click **Save and Deploy**. Cloudflare Pages will build your frontend and assign a free URL, e.g.:
    `lexur-green-cms.pages.dev`
 
