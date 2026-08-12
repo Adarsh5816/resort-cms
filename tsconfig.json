@@ -2,7 +2,6 @@
   "compilerOptions": {
     "target": "ES2022",
     "module": "CommonJS",
-    "moduleResolution": "node",
     "outDir": "./server/dist",
     "rootDir": "./server/src",
     "jsx": "react-jsx",
