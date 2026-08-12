@@ -150,7 +150,7 @@ export const LexurForestTheme: React.FC<{ data: PublicSiteData }> = ({ data }) =
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                {experiences.map(exp => (
+                {experiences.map((exp: any) => (
                   <div key={exp.id} className="bg-[#0D2E1D] rounded-2xl overflow-hidden border border-emerald-800/40 shadow-2xl flex flex-col">
                     {exp.image_url && (
                       <img src={exp.image_url} alt={exp.title} className="w-full h-64 object-cover" />
@@ -193,7 +193,7 @@ export const LexurForestTheme: React.FC<{ data: PublicSiteData }> = ({ data }) =
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-                {rooms.map(room => (
+                {rooms.map((room: any) => (
                   <div key={room.id} className="bg-[#F4EFE6] rounded-2xl overflow-hidden border border-emerald-900/10 shadow-lg hover:shadow-2xl transition-all flex flex-col justify-between">
                     <div>
                       <div className="relative h-60 overflow-hidden">
@@ -251,7 +251,7 @@ export const LexurForestTheme: React.FC<{ data: PublicSiteData }> = ({ data }) =
               </div>
 
               <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-                {amenities.map(a => (
+                {amenities.map((a: any) => (
                   <div key={a.id} className="p-6 bg-[#EBE4D5] border border-emerald-900/10 rounded-2xl text-center space-y-3 shadow-sm hover:shadow-md transition-shadow">
                     <div className="w-12 h-12 bg-[#071F13] text-emerald-400 rounded-2xl flex items-center justify-center mx-auto shadow-md">
                       <IconHelper name={a.icon_name} className="w-6 h-6" />
@@ -280,7 +280,7 @@ export const LexurForestTheme: React.FC<{ data: PublicSiteData }> = ({ data }) =
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                {restaurantItems.map(item => (
+                {restaurantItems.map((item: any) => (
                   <div key={item.id} className="p-6 bg-[#0D2E1D] border border-emerald-800/40 rounded-2xl flex gap-4 items-center shadow-lg">
                     {item.image_url && <img src={item.image_url} alt={item.name} className="w-20 h-20 rounded-xl object-cover" />}
                     <div className="flex-1">
@@ -343,7 +343,7 @@ export const LexurForestTheme: React.FC<{ data: PublicSiteData }> = ({ data }) =
   };
 
   const isSecEnabled = (key: string) => {
-    const sec = sections.find(s => s.section_key === key);
+    const sec = sections.find((s: any) => s.section_key === key);
     return sec ? !!sec.is_enabled : true;
   };
 
@@ -378,7 +378,7 @@ export const LexurForestTheme: React.FC<{ data: PublicSiteData }> = ({ data }) =
       </header>
 
       <main>
-        {sections.map(sec => renderSection(sec.section_key, sec.title, sec.subtitle))}
+        {sections.map((sec: any) => renderSection(sec.section_key, sec.title, sec.subtitle))}
       </main>
 
       <footer className="bg-[#05180E] text-emerald-400 py-10 text-center text-xs border-t border-emerald-900">
