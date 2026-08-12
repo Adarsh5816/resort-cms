@@ -424,7 +424,7 @@ export const LuxuryDarkTheme: React.FC<{ data: PublicSiteData }> = ({ data }) =>
   };
 
   const isSecEnabled = (key: string) => {
-    const sec = sections.find(s => s.section_key === key);
+    const sec = sections.find((s: any) => s.section_key === key);
     return sec ? !!sec.is_enabled : true;
   };
 
@@ -467,7 +467,7 @@ export const LuxuryDarkTheme: React.FC<{ data: PublicSiteData }> = ({ data }) =>
 
       {/* Render Dynamic Sections in Order */}
       <main>
-        {sections.map(sec => renderSection(sec.section_key, sec.title, sec.subtitle))}
+        {sections.map((sec: any) => renderSection(sec.section_key, sec.title, sec.subtitle))}
       </main>
 
       {/* Luxury Footer */}

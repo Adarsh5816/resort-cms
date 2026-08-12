@@ -264,7 +264,7 @@ export const KeralaNatureTheme: React.FC<{ data: PublicSiteData }> = ({ data }) 
   };
 
   const isSecEnabled = (key: string) => {
-    const sec = sections.find(s => s.section_key === key);
+    const sec = sections.find((s: any) => s.section_key === key);
     return sec ? !!sec.is_enabled : true;
   };
 
@@ -285,15 +285,15 @@ export const KeralaNatureTheme: React.FC<{ data: PublicSiteData }> = ({ data }) 
           </nav>
           <button
             onClick={() => setIsEnquiryModalOpen(true)}
-            className="px-5 py-2 bg-amber-800 text-amber-50 text-xs font-serif font-bold rounded-full hover:bg-amber-900"
+            className="px-5 py-2.5 bg-amber-900 hover:bg-amber-950 text-amber-50 font-serif font-bold text-xs uppercase tracking-wider rounded-lg shadow-md"
           >
-            Enquire Now
+            Check Dates
           </button>
         </div>
       </header>
 
       <main>
-        {sections.map(sec => renderSection(sec.section_key, sec.title, sec.subtitle))}
+        {sections.map((sec: any) => renderSection(sec.section_key, sec.title, sec.subtitle))}
       </main>
 
       <footer className="bg-stone-950 text-stone-400 py-10 text-center text-xs border-t border-stone-800">

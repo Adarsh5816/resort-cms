@@ -96,7 +96,7 @@ export const ModernHotelTheme: React.FC<{ data: PublicSiteData }> = ({ data }) =
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                {rooms.map(room => (
+                {rooms.map((room: any) => (
                   <div key={room.id} className="bg-white rounded-2xl shadow-md border border-gray-100 overflow-hidden hover:shadow-xl transition-all flex flex-col">
                     <div className="relative h-56 overflow-hidden">
                       <img src={room.primary_image || 'https://images.unsplash.com/photo-1611892440504-42a792e24d32?w=800&q=80'} alt={room.name} className="w-full h-full object-cover" />
@@ -108,30 +108,21 @@ export const ModernHotelTheme: React.FC<{ data: PublicSiteData }> = ({ data }) =
                     <div className="p-6 flex-1 flex flex-col justify-between space-y-4">
                       <div>
                         <h3 className="text-xl font-bold text-gray-900">{room.name}</h3>
-                        <p className="text-xs text-gray-600 mt-1.5 line-clamp-2">{room.short_description || room.description}</p>
+                        <p className="text-xs text-gray-500 mt-1 line-clamp-2">{room.short_description}</p>
                       </div>
 
-                      <div className="flex flex-wrap gap-2 text-[11px] font-semibold text-gray-600">
-                        <span className="px-2.5 py-1 bg-slate-100 rounded-md">🛏️ {room.bed_type || 'King Bed'}</span>
-                        <span className="px-2.5 py-1 bg-slate-100 rounded-md">📐 {room.room_size || '350 sq.ft'}</span>
-                        <span className="px-2.5 py-1 bg-slate-100 rounded-md">👥 {room.max_occupancy || '2 Adults'}</span>
+                      <div className="pt-4 border-t border-gray-100 flex items-center justify-between text-xs text-gray-500 font-medium">
+                        <span>👥 {room.max_occupancy}</span>
+                        <span>🛏️ {room.bed_type}</span>
+                        <span>📐 {room.room_size}</span>
                       </div>
 
-                      <div className="flex gap-2 pt-2">
-                        <button
-                          onClick={() => handleBookRoom(room)}
-                          className="flex-1 py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs rounded-lg transition-colors text-center"
-                        >
-                          Book Room
-                        </button>
-                        <WhatsAppCTA
-                          number={contact.whatsapp_number || undefined}
-                          resortName={resort.name}
-                          roomName={room.name}
-                          className="px-3 py-2 bg-slate-100 hover:bg-slate-200 text-slate-800 rounded-lg text-xs"
-                          label=""
-                        />
-                      </div>
+                      <button
+                        onClick={() => handleBookRoom(room)}
+                        className="w-full py-3 bg-slate-900 hover:bg-blue-600 text-white font-bold text-xs rounded-xl transition-colors shadow-sm"
+                      >
+                        Book Room Now
+                      </button>
                     </div>
                   </div>
                 ))}
@@ -142,11 +133,11 @@ export const ModernHotelTheme: React.FC<{ data: PublicSiteData }> = ({ data }) =
 
       case 'amenities':
         return (
-          <section key={secKey} id="amenities" className="py-20 bg-white text-gray-900">
+          <section key={secKey} id="amenities" className="py-20 bg-white border-t border-b border-gray-100">
             <div className="max-w-7xl mx-auto px-6">
-              <div className="text-center space-y-2 mb-16">
-                <span className="text-blue-600 font-bold text-xs uppercase tracking-wider">
-                  {subtitle || 'Full Amenities'}
+              <div className="text-center max-w-2xl mx-auto space-y-2 mb-16">
+                <span className="text-xs font-bold uppercase tracking-widest text-blue-600">
+                  {subtitle || 'Facilities'}
                 </span>
                 <h2 className="text-3xl font-extrabold text-gray-900">
                   {title || 'Hotel Features & Business Services'}
@@ -154,7 +145,7 @@ export const ModernHotelTheme: React.FC<{ data: PublicSiteData }> = ({ data }) =
               </div>
 
               <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-                {amenities.map(a => (
+                {amenities.map((a: any) => (
                   <div key={a.id} className="p-6 bg-slate-50 border border-slate-100 rounded-xl space-y-3">
                     <div className="w-10 h-10 bg-blue-100 text-blue-600 rounded-lg flex items-center justify-center">
                       <IconHelper name={a.icon_name} className="w-5 h-5" />
@@ -201,7 +192,7 @@ export const ModernHotelTheme: React.FC<{ data: PublicSiteData }> = ({ data }) =
   };
 
   const isSecEnabled = (key: string) => {
-    const sec = sections.find(s => s.section_key === key);
+    const sec = sections.find((s: any) => s.section_key === key);
     return sec ? !!sec.is_enabled : true;
   };
 
