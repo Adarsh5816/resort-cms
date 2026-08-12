@@ -230,7 +230,7 @@ export const ModernHotelTheme: React.FC<{ data: PublicSiteData }> = ({ data }) =
       </header>
 
       <main>
-        {sections.map(sec => renderSection(sec.section_key, sec.title, sec.subtitle))}
+        {sections.map((sec: any) => renderSection(sec.section_key, sec.title, sec.subtitle))}
       </main>
 
       <footer className="bg-slate-950 text-slate-400 py-10 text-center text-xs">
