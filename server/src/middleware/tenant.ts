@@ -1,19 +1,19 @@
-import { Response, NextFunction } from 'express';
-import { AuthenticatedRequest } from './auth';
+import { Request, Response, NextFunction } from 'express';
 import { getDb } from '../db';
+import { AuthenticatedRequest } from './auth';
 
 /**
- * Middleware for Public APIs: Resolves resort by hostname, custom domain, X-Resort-ID header, or query param
+ * Middleware for Public APIs: Resolves resort tenant ID from hostname or query string (?resort=slug)
  */
 export async function resolvePublicTenant(req: AuthenticatedRequest, res: Response, next: NextFunction) {
   const db = await getDb();
-  
-  // 1. Explicit query parameter (e.g. ?resort=grand-royal or ?resortId=123)
   const queryResort = (req.query.resort || req.query.resortId) as string;
+
+  // 1. Check query parameter e.g. ?resort=lexur-green
   if (queryResort) {
     const resort = await db.get(
       'SELECT * FROM resorts WHERE slug = ? OR id = ? OR custom_domain = ?',
-      [queryResort, queryResort, queryResort]
+      [queryResort.toLowerCase().trim(), queryResort, queryResort.toLowerCase().trim()]
     );
     if (resort) {
       req.tenantResortId = resort.id;
@@ -21,22 +21,7 @@ export async function resolvePublicTenant(req: AuthenticatedRequest, res: Respon
     }
   }
 
-  // 2. Custom header
-  const headerResortId = req.headers['x-resort-id'] as string;
-  const headerDomain = req.headers['x-resort-domain'] as string;
-  if (headerResortId) {
-    req.tenantResortId = headerResortId;
-    return next();
-  }
-  if (headerDomain) {
-    const resort = await db.get('SELECT * FROM resorts WHERE custom_domain = ? OR slug = ?', [headerDomain, headerDomain]);
-    if (resort) {
-      req.tenantResortId = resort.id;
-      return next();
-    }
-  }
-
-  // 3. Host / Domain header resolution (e.g., grandroyal.local or custom domain)
+  // 2. Check Host header (e.g. www.lexurbooking.in)
   const host = (req.headers.host || '').split(':')[0].toLowerCase();
   if (host && host !== 'localhost' && host !== '127.0.0.1') {
     const resort = await db.get('SELECT * FROM resorts WHERE custom_domain = ? OR slug = ?', [host, host]);
@@ -46,7 +31,7 @@ export async function resolvePublicTenant(req: AuthenticatedRequest, res: Respon
     }
   }
 
-  // Fallback to first active resort if in dev local testing
+  // 3. Fallback to primary active resort (Lexur Green)
   const fallbackResort = await db.get('SELECT * FROM resorts WHERE status = "active" ORDER BY created_at ASC LIMIT 1');
   if (fallbackResort) {
     req.tenantResortId = fallbackResort.id;
@@ -57,20 +42,27 @@ export async function resolvePublicTenant(req: AuthenticatedRequest, res: Respon
 }
 
 /**
- * Middleware for Protected Admin APIs: Ensures RESORT_ADMIN can ONLY access their assigned resort
+ * Middleware for Protected Admin APIs: Ensures RESORT_ADMIN can ONLY access their assigned resort, while SUPER_ADMIN can view all or target specific resort
  */
-export function enforceTenantIsolation(req: AuthenticatedRequest, res: Response, next: NextFunction) {
+export async function enforceTenantIsolation(req: AuthenticatedRequest, res: Response, next: NextFunction) {
   if (!req.user) {
     return res.status(401).json({ error: 'Authentication required' });
   }
 
+  const db = await getDb();
+
   if (req.user.role === 'SUPER_ADMIN') {
-    // Super admin can specify target resort via header or query, or default to header/query
     const targetResortId = (req.headers['x-target-resort-id'] || req.query.resortId) as string;
     if (targetResortId) {
       req.tenantResortId = targetResortId;
+    } else if (req.user.resort_id) {
+      req.tenantResortId = req.user.resort_id;
     } else {
-      req.tenantResortId = req.user.resort_id || undefined;
+      // Default Super Admin to first active resort (Lexur Green) for tenant-bound views
+      const defaultResort = await db.get('SELECT id FROM resorts WHERE status = "active" ORDER BY created_at ASC LIMIT 1');
+      if (defaultResort) {
+        req.tenantResortId = defaultResort.id;
+      }
     }
     return next();
   }
