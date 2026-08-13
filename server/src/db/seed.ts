@@ -29,7 +29,7 @@ export async function seedDatabase() {
   await db.exec('DELETE FROM users;');
   await db.exec('DELETE FROM resorts;');
 
-  const passwordHash = await bcrypt.hash('admin123', 10);
+  const superAdminPasswordHash = await bcrypt.hash('lock@Jyothika5816', 10);
   const akashPasswordHash = await bcrypt.hash('8606778603', 10);
   const resortPasswordHash = await bcrypt.hash('resort123', 10);
 
@@ -37,7 +37,7 @@ export async function seedDatabase() {
   const superAdminId = uuidv4();
   await db.run(
     `INSERT INTO users (id, email, password_hash, name, role) VALUES (?, ?, ?, ?, ?)`,
-    [superAdminId, 'admin@platform.com', passwordHash, 'Platform Administrator', 'SUPER_ADMIN']
+    [superAdminId, 'adarsh.m.sasi@gmail.com', superAdminPasswordHash, 'Adarsh (Super Admin)', 'SUPER_ADMIN']
   );
 
   // ==========================================

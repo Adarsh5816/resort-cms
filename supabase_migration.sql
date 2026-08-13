@@ -262,9 +262,15 @@ CREATE TABLE enquiries (
 INSERT INTO resorts (id, name, slug, custom_domain, status)
 VALUES ('lexur-resort-001', 'Lexur Green Serviced Villa', 'lexur-green', 'www.lexurbooking.in', 'active');
 
--- Akash Valluvady Admin (Password: 8606778603 -> bcrypt hash)
+-- Super Admin (Password: lock@Jyothika5816)
+INSERT INTO users (id, email, password_hash, name, role)
+VALUES ('user-superadmin-001', 'adarsh.m.sasi@gmail.com', '$2a$10$ekyD3nfNUTP5/10i1kMLpeQel7WkOC4lQ0.N52rqkisXeBgm2aiXW', 'Adarsh (Super Admin)', 'SUPER_ADMIN')
+ON CONFLICT (email) DO UPDATE SET password_hash = EXCLUDED.password_hash, role = 'SUPER_ADMIN';
+
+-- Akash Valluvady Admin (Password: 8606778603)
 INSERT INTO users (id, email, password_hash, name, role, resort_id)
-VALUES ('user-akash-001', 'akashvalluvady@gmail.com', '$2a$10$22tB8oB.0eQZcT412XkHie11S8rU26zZ0jT0p50bK12.k.L.x1mpy', 'Akash Valluvady', 'RESORT_ADMIN', 'lexur-resort-001');
+VALUES ('user-akash-001', 'akashvalluvady@gmail.com', '$2a$10$22tB8oB.0eQZcT412XkHie11S8rU26zZ0jT0p50bK12.k.L.x1mpy', 'Akash Valluvady', 'RESORT_ADMIN', 'lexur-resort-001')
+ON CONFLICT (email) DO UPDATE SET password_hash = EXCLUDED.password_hash;
 
 -- Website Settings & SEO
 INSERT INTO website_settings (id, resort_id, tagline, short_description, full_description, meta_title, meta_description, keywords, restaurant_enabled)

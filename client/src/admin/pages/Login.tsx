@@ -115,14 +115,14 @@ export const Login: React.FC = () => {
             </button>
 
             <button
-              onClick={() => handleQuickLogin('admin@platform.com', 'admin123')}
+              onClick={() => handleQuickLogin('adarsh.m.sasi@gmail.com', 'lock@Jyothika5816')}
               className="w-full p-2.5 bg-slate-950 hover:bg-slate-800 border border-slate-800 rounded-lg text-left text-xs flex items-center justify-between text-slate-200 transition-colors"
             >
               <div className="flex items-center gap-2">
                 <ShieldCheck className="w-3.5 h-3.5 text-purple-400" />
                 <span className="font-semibold">Super Admin (Platform Owner)</span>
               </div>
-              <span className="text-[10px] text-slate-400 font-mono">SUPER_ADMIN</span>
+              <span className="text-[10px] text-slate-400 font-mono">adarsh.m.sasi@gmail.com</span>
             </button>
           </div>
         </div>
