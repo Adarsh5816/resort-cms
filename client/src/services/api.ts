@@ -1,4 +1,5 @@
-const BASE_HOST = (import.meta.env.VITE_API_URL || 'https://resort-cms-api.onrender.com').replace(/\/$/, '');
+const envApiUrl = (import.meta as any).env?.VITE_API_URL;
+const BASE_HOST = (envApiUrl || 'https://resort-cms-api.onrender.com').replace(/\/$/, '');
 const API_BASE = `${BASE_HOST}/api`;
 
 export function getStoredToken(): string | null {
