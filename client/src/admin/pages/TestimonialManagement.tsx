@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { apiRequest } from '../../services/api';
 import { Testimonial } from '../../types';
-import { Plus, Trash2, Star, MessageSquare } from 'lucide-react';
+import { Plus, Trash2, Star, MessageSquare, RefreshCw, CheckCircle2 } from 'lucide-react';
 
 export const TestimonialManagement: React.FC = () => {
   const [testimonials, setTestimonials] = useState<Testimonial[]>([]);
   const [loading, setLoading] = useState(true);
+  const [syncingGoogle, setSyncingGoogle] = useState(false);
+  const [syncSuccessMsg, setSyncSuccessMsg] = useState<string | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const [formData, setFormData] = useState({
@@ -31,6 +33,21 @@ export const TestimonialManagement: React.FC = () => {
   useEffect(() => {
     loadData();
   }, []);
+
+  const handleSyncGoogle = async () => {
+    setSyncingGoogle(true);
+    setSyncSuccessMsg(null);
+    try {
+      const res = await apiRequest('/testimonials/sync-google', { method: 'POST' });
+      setSyncSuccessMsg(res.message || 'Google Reviews synced successfully!');
+      loadData();
+      setTimeout(() => setSyncSuccessMsg(null), 5000);
+    } catch (err: any) {
+      alert(err.message || 'Failed to sync Google Reviews');
+    } finally {
+      setSyncingGoogle(false);
+    }
+  };
 
   const handleAdd = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -58,41 +75,75 @@ export const TestimonialManagement: React.FC = () => {
     <div className="space-y-8 max-w-5xl mx-auto">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h1 className="text-3xl font-serif font-bold text-white">Testimonials & Reviews</h1>
+          <h1 className="text-3xl font-serif font-bold text-white">Testimonials & Google Reviews</h1>
           <p className="text-xs text-slate-400 mt-1">
-            Display guest testimonials and star ratings on your public website.
+            Display guest testimonials & auto-sync Google Reviews directly onto your website.
           </p>
         </div>
-        <button
-          onClick={() => setIsModalOpen(true)}
-          className="px-4 py-2.5 bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold text-xs rounded-xl shadow-lg flex items-center gap-2 transition-colors self-start"
-        >
-          <Plus className="w-4 h-4" />
-          <span>Add Review</span>
-        </button>
+
+        <div className="flex items-center gap-3">
+          <button
+            onClick={handleSyncGoogle}
+            disabled={syncingGoogle}
+            className="px-4 py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs rounded-xl shadow-lg flex items-center gap-2 transition-colors disabled:opacity-50"
+          >
+            <RefreshCw className={`w-4 h-4 ${syncingGoogle ? 'animate-spin' : ''}`} />
+            <span>{syncingGoogle ? 'Syncing Google...' : 'Auto-Sync Google Reviews'}</span>
+          </button>
+
+          <button
+            onClick={() => setIsModalOpen(true)}
+            className="px-4 py-2.5 bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold text-xs rounded-xl shadow-lg flex items-center gap-2 transition-colors"
+          >
+            <Plus className="w-4 h-4" />
+            <span>Add Manual Review</span>
+          </button>
+        </div>
       </div>
+
+      {syncSuccessMsg && (
+        <div className="p-4 bg-emerald-950/80 border border-emerald-700 text-emerald-300 rounded-xl text-xs flex items-center gap-2 shadow-lg">
+          <CheckCircle2 className="w-4 h-4 shrink-0 text-emerald-400" />
+          <span>{syncSuccessMsg}</span>
+        </div>
+      )}
 
       {loading ? (
         <div className="text-slate-400 font-mono text-xs">Loading testimonials...</div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {testimonials.map(t => (
-            <div key={t.id} className="p-6 bg-slate-900 border border-slate-800 rounded-2xl space-y-3 flex flex-col justify-between">
+            <div key={t.id} className="p-6 bg-slate-900 border border-slate-800 rounded-2xl space-y-3 flex flex-col justify-between shadow-xl">
               <div className="space-y-2">
-                <div className="flex text-amber-400 gap-1">
-                  {[...Array(t.rating)].map((_, i) => (
-                    <Star key={i} className="w-4 h-4 fill-current" />
-                  ))}
+                <div className="flex items-center justify-between">
+                  <div className="flex text-amber-400 gap-1">
+                    {[...Array(t.rating || 5)].map((_, i) => (
+                      <Star key={i} className="w-4 h-4 fill-current" />
+                    ))}
+                  </div>
+
+                  {(t as any).source === 'google' && (
+                    <span className="px-2 py-0.5 bg-blue-500/20 text-blue-400 border border-blue-500/30 text-[10px] font-bold rounded-full flex items-center gap-1">
+                      <span>🔵 Google Synced</span>
+                    </span>
+                  )}
                 </div>
+
                 <p className="text-xs text-slate-300 font-serif italic">"{t.review_text}"</p>
               </div>
 
               <div className="flex items-center justify-between pt-3 border-t border-slate-800">
-                <div>
-                  <h5 className="text-xs font-bold text-white">{t.customer_name}</h5>
-                  <p className="text-[10px] text-slate-400">{t.location_or_title}</p>
+                <div className="flex items-center gap-3">
+                  {t.avatar_url && (
+                    <img src={t.avatar_url} alt={t.customer_name} className="w-8 h-8 rounded-full object-cover border border-slate-700" />
+                  )}
+                  <div>
+                    <h5 className="text-xs font-bold text-white">{t.customer_name}</h5>
+                    <p className="text-[10px] text-slate-400">{t.location_or_title}</p>
+                  </div>
                 </div>
-                <button onClick={() => handleDelete(t.id)} className="p-1.5 text-rose-400 hover:bg-slate-800 rounded-lg">
+
+                <button onClick={() => handleDelete(t.id)} className="p-1.5 text-rose-400 hover:bg-slate-800 rounded-lg transition-colors">
                   <Trash2 className="w-4 h-4" />
                 </button>
               </div>
@@ -104,7 +155,7 @@ export const TestimonialManagement: React.FC = () => {
       {/* Modal */}
       {isModalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm">
-          <div className="relative w-full max-w-md bg-slate-900 border border-slate-800 rounded-2xl p-6 text-slate-100 space-y-4">
+          <div className="relative w-full max-w-md bg-slate-900 border border-slate-800 rounded-2xl p-6 text-slate-100 space-y-4 shadow-2xl">
             <h3 className="text-xl font-serif font-bold text-amber-400">Add Guest Review</h3>
 
             <form onSubmit={handleAdd} className="space-y-4">
@@ -183,3 +234,5 @@ export const TestimonialManagement: React.FC = () => {
     </div>
   );
 };
+
+export default TestimonialManagement;
