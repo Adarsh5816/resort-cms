@@ -104,13 +104,20 @@ router.post('/', async (req: AuthenticatedRequest, res: Response) => {
 router.put('/:id', async (req: AuthenticatedRequest, res: Response) => {
   try {
     const { id } = req.params;
-    const { name, slug, custom_domain, status } = req.body;
+    const { name, slug, custom_domain, status, theme_id } = req.body;
     const db = await getDb();
 
     await db.run(
       'UPDATE resorts SET name = ?, slug = ?, custom_domain = ?, status = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?',
       [name, slug, custom_domain || null, status || 'active', id]
     );
+
+    if (theme_id) {
+      await db.run(
+        'UPDATE theme_settings SET theme_id = ? WHERE resort_id = ?',
+        [theme_id, id]
+      );
+    }
 
     res.json({ message: 'Resort updated successfully' });
   } catch (err: any) {
