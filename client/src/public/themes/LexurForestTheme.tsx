@@ -11,8 +11,10 @@ import {
 } from 'lucide-react';
 
 export const LexurForestTheme: React.FC<{ data: PublicSiteData }> = ({ data }) => {
-  const { resort, settings, sections, rooms, amenities, gallery, experiences, attractions, restaurantItems, testimonials, contact } = data;
+  const { resort, settings, theme, sections, rooms, amenities, gallery, experiences, attractions, restaurantItems, testimonials, contact } = data;
   const { setIsEnquiryModalOpen, setSelectedRoomForBooking } = useTenant();
+
+  const heroOpacity = theme?.hero_overlay_opacity !== undefined ? theme.hero_overlay_opacity : 0.65;
 
   const handleBookRoom = (room: Room) => {
     setSelectedRoomForBooking(room);
@@ -29,9 +31,12 @@ export const LexurForestTheme: React.FC<{ data: PublicSiteData }> = ({ data }) =
               <img
                 src={getFullImageUrl(settings.hero_image_url || rooms[0]?.primary_image || 'https://images.unsplash.com/photo-1580587771525-78b9dba3b914?w=1600&q=80')}
                 alt="Lexur Green Villa"
-                className="w-full h-full object-cover opacity-35 scale-105"
+                className="w-full h-full object-cover scale-105"
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-[#071F13] via-[#071F13]/70 to-[#0A2E1C]/40" />
+              <div
+                className="absolute inset-0 bg-gradient-to-t from-[#071F13] via-[#071F13]/85 to-[#0A2E1C]/60"
+                style={{ opacity: heroOpacity }}
+              />
             </div>
 
             <div className="relative z-10 max-w-5xl px-6 text-center space-y-6 pt-16">
@@ -356,6 +361,7 @@ export const LexurForestTheme: React.FC<{ data: PublicSiteData }> = ({ data }) =
 
   return (
     <div className="min-h-screen bg-[#071F13] text-white font-serif selection:bg-emerald-600 selection:text-white">
+      {theme?.custom_css && <style>{theme.custom_css}</style>}
       {/* Lexur Green Header matching Business Card Logo */}
       <header className="sticky top-0 z-40 bg-[#071F13]/95 backdrop-blur-md border-b border-emerald-900/60 shadow-xl">
         <div className="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">

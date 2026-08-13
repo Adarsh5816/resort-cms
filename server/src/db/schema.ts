@@ -70,10 +70,17 @@ export async function initSchema() {
       border_radius TEXT,
       header_style TEXT,
       hero_style TEXT,
+      custom_css TEXT,
+      hero_overlay_opacity REAL DEFAULT 0.65,
+      custom_head_code TEXT,
       updated_at DATETIME DEFAULT CURRENT_TIMESTAMP,
       FOREIGN KEY (resort_id) REFERENCES resorts(id) ON DELETE CASCADE
     );
   `);
+
+  try { await db.exec('ALTER TABLE theme_settings ADD COLUMN custom_css TEXT'); } catch (e) {}
+  try { await db.exec('ALTER TABLE theme_settings ADD COLUMN hero_overlay_opacity REAL DEFAULT 0.65'); } catch (e) {}
+  try { await db.exec('ALTER TABLE theme_settings ADD COLUMN custom_head_code TEXT'); } catch (e) {}
 
   // 5. Homepage Sections Table
   await db.exec(`

@@ -83,10 +83,10 @@ router.put('/seo', async (req: AuthenticatedRequest, res: Response) => {
   }
 });
 
-// PUT /api/website/theme - Change Theme (luxury-dark, kerala-nature, modern-hotel)
+// PUT /api/website/theme - Change Theme & Custom CSS / Opacity
 router.put('/theme', async (req: AuthenticatedRequest, res: Response) => {
   try {
-    const { theme_id, primary_color, secondary_color, accent_color, font_family, border_radius, header_style, hero_style } = req.body;
+    const { theme_id, primary_color, secondary_color, accent_color, font_family, border_radius, header_style, hero_style, custom_css, hero_overlay_opacity, custom_head_code } = req.body;
     const db = await getDb();
 
     if (!theme_id) {
@@ -103,13 +103,17 @@ router.put('/theme', async (req: AuthenticatedRequest, res: Response) => {
         border_radius = COALESCE(?, border_radius),
         header_style = COALESCE(?, header_style),
         hero_style = COALESCE(?, hero_style),
+        custom_css = ?,
+        hero_overlay_opacity = ?,
+        custom_head_code = ?,
         updated_at = CURRENT_TIMESTAMP
        WHERE resort_id = ?`,
-      [theme_id, primary_color, secondary_color, accent_color, font_family, border_radius, header_style, hero_style, req.tenantResortId]
+      [theme_id, primary_color, secondary_color, accent_color, font_family, border_radius, header_style, hero_style, custom_css !== undefined ? custom_css : null, hero_overlay_opacity !== undefined ? hero_overlay_opacity : 0.65, custom_head_code !== undefined ? custom_head_code : null, req.tenantResortId]
     );
 
-    res.json({ message: 'Theme updated successfully', theme_id });
+    res.json({ message: 'Theme & Custom Code updated successfully', theme_id });
   } catch (err: any) {
+    console.error('Theme update error:', err);
     res.status(500).json({ error: 'Failed to update theme settings' });
   }
 });

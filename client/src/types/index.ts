@@ -48,6 +48,9 @@ export interface ThemeSettings {
   border_radius?: string;
   header_style?: string;
   hero_style?: string;
+  custom_css?: string | null;
+  hero_overlay_opacity?: number;
+  custom_head_code?: string | null;
 }
 
 export interface HomepageSection {
