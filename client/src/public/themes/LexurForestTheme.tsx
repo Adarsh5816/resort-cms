@@ -27,7 +27,7 @@ export const LexurForestTheme: React.FC<{ data: PublicSiteData }> = ({ data }) =
             {/* Background Forest Image with Deep Forest Emerald Overlay */}
             <div className="absolute inset-0 z-0">
               <img
-                src={rooms[0]?.primary_image || 'https://images.unsplash.com/photo-1580587771525-78b9dba3b914?w=1600&q=80'}
+                src={getFullImageUrl(settings.hero_image_url || rooms[0]?.primary_image || 'https://images.unsplash.com/photo-1580587771525-78b9dba3b914?w=1600&q=80')}
                 alt="Lexur Green Villa"
                 className="w-full h-full object-cover opacity-35 scale-105"
               />
@@ -128,7 +128,7 @@ export const LexurForestTheme: React.FC<{ data: PublicSiteData }> = ({ data }) =
               <div className="relative">
                 <div className="absolute -inset-3 bg-gradient-to-tr from-emerald-900/20 to-emerald-700/20 rounded-3xl blur-lg" />
                 <img
-                  src={rooms[0]?.primary_image || 'https://images.unsplash.com/photo-1580587771525-78b9dba3b914?w=800&q=80'}
+                  src={getFullImageUrl(settings.about_image_url || rooms[0]?.primary_image || 'https://images.unsplash.com/photo-1580587771525-78b9dba3b914?w=800&q=80')}
                   alt="Lexur Green Serviced Villa"
                   className="relative rounded-2xl shadow-2xl object-cover w-full h-[480px] border-4 border-emerald-900/30"
                 />
@@ -154,7 +154,7 @@ export const LexurForestTheme: React.FC<{ data: PublicSiteData }> = ({ data }) =
                 {experiences.map((exp: any) => (
                   <div key={exp.id} className="bg-[#0D2E1D] rounded-2xl overflow-hidden border border-emerald-800/40 shadow-2xl flex flex-col">
                     {exp.image_url && (
-                      <img src={exp.image_url} alt={exp.title} className="w-full h-64 object-cover" />
+                      <img src={getFullImageUrl(exp.image_url)} alt={exp.title} className="w-full h-64 object-cover" />
                     )}
                     <div className="p-6 space-y-3 flex-1 flex flex-col justify-between">
                       <div>
@@ -198,7 +198,7 @@ export const LexurForestTheme: React.FC<{ data: PublicSiteData }> = ({ data }) =
                   <div key={room.id} className="bg-[#F4EFE6] rounded-2xl overflow-hidden border border-emerald-900/10 shadow-lg hover:shadow-2xl transition-all flex flex-col justify-between">
                     <div>
                       <div className="relative h-60 overflow-hidden">
-                        <img src={room.primary_image || 'https://images.unsplash.com/photo-1580587771525-78b9dba3b914?w=800&q=80'} alt={room.name} className="w-full h-full object-cover" />
+                        <img src={getFullImageUrl(room.primary_image) || 'https://images.unsplash.com/photo-1580587771525-78b9dba3b914?w=800&q=80'} alt={room.name} className="w-full h-full object-cover" />
                         <div className="absolute top-4 right-4 bg-[#071F13] text-emerald-300 font-bold text-xs px-3 py-1 rounded-full border border-emerald-500/40">
                           ₹{room.price}/night
                         </div>

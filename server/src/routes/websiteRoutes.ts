@@ -32,7 +32,7 @@ router.get('/settings', async (req: AuthenticatedRequest, res: Response) => {
 // PUT /api/website/profile - Update resort metadata & profile info
 router.put('/profile', async (req: AuthenticatedRequest, res: Response) => {
   try {
-    const { name, tagline, short_description, full_description, logo_url, favicon_url } = req.body;
+    const { name, tagline, short_description, full_description, logo_url, favicon_url, hero_image_url, about_image_url } = req.body;
     const db = await getDb();
 
     if (name) {
@@ -46,9 +46,11 @@ router.put('/profile', async (req: AuthenticatedRequest, res: Response) => {
         full_description = COALESCE(?, full_description),
         logo_url = COALESCE(?, logo_url),
         favicon_url = COALESCE(?, favicon_url),
+        hero_image_url = COALESCE(?, hero_image_url),
+        about_image_url = COALESCE(?, about_image_url),
         updated_at = CURRENT_TIMESTAMP
        WHERE resort_id = ?`,
-      [tagline, short_description, full_description, logo_url, favicon_url, req.tenantResortId]
+      [tagline, short_description, full_description, logo_url, favicon_url, hero_image_url, about_image_url, req.tenantResortId]
     );
 
     res.json({ message: 'Resort profile updated' });

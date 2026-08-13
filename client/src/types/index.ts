@@ -31,6 +31,8 @@ export interface WebsiteSettings {
   keywords?: string | null;
   og_image_url?: string | null;
   canonical_url?: string | null;
+  hero_image_url?: string | null;
+  about_image_url?: string | null;
   restaurant_enabled?: number | boolean;
   draft_mode?: number | boolean;
 }

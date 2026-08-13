@@ -45,12 +45,17 @@ export async function initSchema() {
       keywords TEXT,
       og_image_url TEXT,
       canonical_url TEXT,
+      hero_image_url TEXT,
+      about_image_url TEXT,
       restaurant_enabled INTEGER DEFAULT 1,
       draft_mode INTEGER DEFAULT 0,
       updated_at DATETIME DEFAULT CURRENT_TIMESTAMP,
       FOREIGN KEY (resort_id) REFERENCES resorts(id) ON DELETE CASCADE
     );
   `);
+
+  try { await db.exec('ALTER TABLE website_settings ADD COLUMN hero_image_url TEXT'); } catch (e) {}
+  try { await db.exec('ALTER TABLE website_settings ADD COLUMN about_image_url TEXT'); } catch (e) {}
 
   // 4. Theme Settings Table
   await db.exec(`
