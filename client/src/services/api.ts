@@ -1,6 +1,14 @@
 const envApiUrl = (import.meta as any).env?.VITE_API_URL;
-const BASE_HOST = (envApiUrl || 'https://resort-cms-api.onrender.com').replace(/\/$/, '');
+export const BASE_HOST = (envApiUrl || 'https://resort-cms-api.onrender.com').replace(/\/$/, '');
 const API_BASE = `${BASE_HOST}/api`;
+
+export function getFullImageUrl(url?: string): string {
+  if (!url) return '';
+  if (url.startsWith('http://') || url.startsWith('https://') || url.startsWith('data:')) {
+    return url;
+  }
+  return `${BASE_HOST}${url.startsWith('/') ? '' : '/'}${url}`;
+}
 
 export function getStoredToken(): string | null {
   return localStorage.getItem('resort_cms_token');

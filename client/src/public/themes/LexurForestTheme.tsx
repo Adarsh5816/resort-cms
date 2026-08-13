@@ -4,6 +4,7 @@ import { useTenant } from '../../context/TenantContext';
 import { WhatsAppCTA } from '../components/WhatsAppCTA';
 import { IconHelper } from '../components/IconHelper';
 import { LexurLogo } from '../components/LexurLogo';
+import { getFullImageUrl } from '../../services/api';
 import {
   Trees, Compass, Home, Utensils, Wifi, Car, Flame, Shield, MapPin, Phone, Mail,
   Star, CheckCircle2, ChevronRight, Sparkles, Moon
@@ -303,7 +304,7 @@ export const LexurForestTheme: React.FC<{ data: PublicSiteData }> = ({ data }) =
             <div className="max-w-7xl mx-auto px-6 grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
               <div className="space-y-6">
                 {settings.logo_url ? (
-                  <img src={settings.logo_url} alt={resort.name} className="h-16 w-auto object-contain" />
+                  <img src={getFullImageUrl(settings.logo_url)} alt={resort.name} className="h-16 w-auto object-contain" />
                 ) : (
                   <LexurLogo className="h-16" variant="white" showSubtitle={true} />
                 )}
@@ -359,7 +360,7 @@ export const LexurForestTheme: React.FC<{ data: PublicSiteData }> = ({ data }) =
       <header className="sticky top-0 z-40 bg-[#071F13]/95 backdrop-blur-md border-b border-emerald-900/60 shadow-xl">
         <div className="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
           {settings.logo_url ? (
-            <img src={settings.logo_url} alt={resort.name} className="h-12 w-auto object-contain" />
+            <img src={getFullImageUrl(settings.logo_url)} alt={resort.name} className="h-12 w-auto object-contain" />
           ) : (
             <LexurLogo className="h-12" variant="white" showSubtitle={true} />
           )}
@@ -391,7 +392,11 @@ export const LexurForestTheme: React.FC<{ data: PublicSiteData }> = ({ data }) =
 
       <footer className="bg-[#05180E] text-emerald-400 py-10 text-center text-xs border-t border-emerald-900">
         <div className="max-w-7xl mx-auto px-6 space-y-3">
-          <LexurLogo className="h-10 mx-auto justify-center" variant="white" showSubtitle={false} />
+          {settings.logo_url ? (
+            <img src={getFullImageUrl(settings.logo_url)} alt={resort.name} className="h-10 w-auto object-contain mx-auto" />
+          ) : (
+            <LexurLogo className="h-10 mx-auto justify-center" variant="white" showSubtitle={false} />
+          )}
           <p className="text-emerald-200">Valluvady, Wayanad, Kerala • www.lexurbooking.in</p>
           <p className="text-emerald-500">© {new Date().getFullYear()} Lexur Green Serviced Villa. All Rights Reserved.</p>
         </div>
