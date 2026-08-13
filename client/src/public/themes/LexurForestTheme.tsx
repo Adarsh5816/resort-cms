@@ -302,7 +302,11 @@ export const LexurForestTheme: React.FC<{ data: PublicSiteData }> = ({ data }) =
           <section key={secKey} id="contact" className="py-24 bg-[#05180E] text-white border-t border-emerald-900">
             <div className="max-w-7xl mx-auto px-6 grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
               <div className="space-y-6">
-                <LexurLogo className="h-16" variant="white" showSubtitle={true} />
+                {settings.logo_url ? (
+                  <img src={settings.logo_url} alt={resort.name} className="h-16 w-auto object-contain" />
+                ) : (
+                  <LexurLogo className="h-16" variant="white" showSubtitle={true} />
+                )}
                 <h2 className="text-3xl md:text-5xl font-serif font-bold text-emerald-50 leading-tight">
                   {title || 'Reserve Your Forest Stay'}
                 </h2>
@@ -354,7 +358,11 @@ export const LexurForestTheme: React.FC<{ data: PublicSiteData }> = ({ data }) =
       {/* Lexur Green Header matching Business Card Logo */}
       <header className="sticky top-0 z-40 bg-[#071F13]/95 backdrop-blur-md border-b border-emerald-900/60 shadow-xl">
         <div className="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
-          <LexurLogo className="h-12" variant="white" showSubtitle={true} />
+          {settings.logo_url ? (
+            <img src={settings.logo_url} alt={resort.name} className="h-12 w-auto object-contain" />
+          ) : (
+            <LexurLogo className="h-12" variant="white" showSubtitle={true} />
+          )}
 
           <nav className="hidden md:flex items-center gap-8 text-xs font-bold uppercase tracking-wider text-emerald-100 font-sans">
             {isSecEnabled('about') && <a href="#about" className="hover:text-emerald-400">About</a>}
