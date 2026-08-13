@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { apiRequest } from '../../services/api';
-import { Building, Upload, CheckCircle2 } from 'lucide-react';
+import { apiRequest, uploadFile } from '../../services/api';
+import { Building, Upload, CheckCircle2, Image, Link2 } from 'lucide-react';
 
 export const ResortProfile: React.FC = () => {
   const [profile, setProfile] = useState<any>({});
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
+  const [uploadingLogo, setUploadingLogo] = useState(false);
   const [savedSuccess, setSavedSuccess] = useState(false);
 
   const loadProfile = async () => {
@@ -30,6 +31,21 @@ export const ResortProfile: React.FC = () => {
   useEffect(() => {
     loadProfile();
   }, []);
+
+  const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>, field: string) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    setUploadingLogo(true);
+    try {
+      const res = await uploadFile(file);
+      setProfile((prev: any) => ({ ...prev, [field]: res.url }));
+    } catch (err: any) {
+      alert(err.message || 'File upload failed');
+    } finally {
+      setUploadingLogo(false);
+    }
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -67,7 +83,7 @@ export const ResortProfile: React.FC = () => {
         )}
       </div>
 
-      <form onSubmit={handleSubmit} className="p-8 bg-slate-900 border border-slate-800 rounded-2xl space-y-4 text-slate-100">
+      <form onSubmit={handleSubmit} className="p-8 bg-slate-900 border border-slate-800 rounded-2xl space-y-6 text-slate-100 shadow-2xl">
         <div>
           <label className="block text-xs font-semibold text-slate-300 mb-1">Resort Name *</label>
           <input
@@ -83,11 +99,49 @@ export const ResortProfile: React.FC = () => {
           <label className="block text-xs font-semibold text-slate-300 mb-1">Tagline</label>
           <input
             type="text"
-            placeholder="Exquisite Opulence on the Oceanfront"
+            placeholder="3BHK Private Villa near Forest Border"
             value={profile.tagline}
             onChange={e => setProfile({ ...profile, tagline: e.target.value })}
             className="w-full px-3 py-2 text-sm bg-slate-950 border border-slate-800 rounded-lg text-white"
           />
+        </div>
+
+        <div className="p-5 bg-slate-950/80 border border-slate-800 rounded-xl space-y-4">
+          <div className="flex items-center justify-between">
+            <div>
+              <h4 className="text-xs font-bold text-amber-400 uppercase tracking-wider">Resort Logo & Emblem</h4>
+              <p className="text-[11px] text-slate-400">Upload your logo image directly or enter image URL</p>
+            </div>
+            {profile.logo_url && (
+              <div className="h-12 w-12 rounded-lg bg-slate-900 border border-slate-800 p-1 flex items-center justify-center">
+                <img src={profile.logo_url} alt="Logo Preview" className="h-full w-auto object-contain" />
+              </div>
+            )}
+          </div>
+
+          <div className="flex flex-col sm:flex-row gap-3 items-stretch">
+            <div className="relative flex-1">
+              <input
+                type="text"
+                placeholder="https://... or uploaded image URL"
+                value={profile.logo_url}
+                onChange={e => setProfile({ ...profile, logo_url: e.target.value })}
+                className="w-full px-3 py-2 text-xs bg-slate-900 border border-slate-800 rounded-lg text-white font-mono"
+              />
+            </div>
+
+            <label className="px-4 py-2 bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold text-xs rounded-lg cursor-pointer flex items-center justify-center gap-2 transition-colors shrink-0">
+              <Upload className="w-4 h-4" />
+              <span>{uploadingLogo ? 'Uploading...' : 'Upload Logo File'}</span>
+              <input
+                type="file"
+                accept="image/*"
+                className="hidden"
+                onChange={e => handleFileUpload(e, 'logo_url')}
+                disabled={uploadingLogo}
+              />
+            </label>
+          </div>
         </div>
 
         <div>
@@ -112,21 +166,12 @@ export const ResortProfile: React.FC = () => {
           />
         </div>
 
-        <div>
-          <label className="block text-xs font-semibold text-slate-300 mb-1">Logo Image URL</label>
-          <input
-            type="text"
-            placeholder="https://..."
-            value={profile.logo_url}
-            onChange={e => setProfile({ ...profile, logo_url: e.target.value })}
-            className="w-full px-3 py-2 text-sm bg-slate-950 border border-slate-800 rounded-lg text-white"
-          />
-        </div>
-
-        <button type="submit" disabled={saving} className="px-6 py-2.5 bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold text-xs rounded-xl shadow">
-          {saving ? 'Saving Profile...' : 'Save Resort Profile'}
+        <button type="submit" disabled={saving} className="px-6 py-2.5 bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold text-xs rounded-xl shadow-lg font-sans uppercase tracking-wider">
+          {saving ? 'Saving Profile...' : 'Save Resort Profile & Logo'}
         </button>
       </form>
     </div>
   );
 };
+
+export default ResortProfile;
