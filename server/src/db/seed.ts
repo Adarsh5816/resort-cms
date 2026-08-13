@@ -7,27 +7,14 @@ export async function seedDatabase() {
   await initSchema();
   const db = await getDb();
 
-  console.log('🌱 Starting database seeding with real Lexur Green Serviced Villa...');
+  // Protect customer data: If database already has resorts, NEVER wipe or delete customer uploads!
+  const existingResort = await db.get('SELECT id FROM resorts LIMIT 1');
+  if (existingResort) {
+    console.log('✅ Database already populated with customer data. Preserving all uploaded images & data.');
+    return;
+  }
 
-  // Clear existing data in reverse order of foreign keys
-  await db.exec('DELETE FROM enquiries;');
-  await db.exec('DELETE FROM social_links;');
-  await db.exec('DELETE FROM contact_information;');
-  await db.exec('DELETE FROM testimonials;');
-  await db.exec('DELETE FROM restaurant_items;');
-  await db.exec('DELETE FROM attractions;');
-  await db.exec('DELETE FROM experiences;');
-  await db.exec('DELETE FROM gallery_images;');
-  await db.exec('DELETE FROM gallery_categories;');
-  await db.exec('DELETE FROM room_amenities;');
-  await db.exec('DELETE FROM amenities;');
-  await db.exec('DELETE FROM room_images;');
-  await db.exec('DELETE FROM rooms;');
-  await db.exec('DELETE FROM homepage_sections;');
-  await db.exec('DELETE FROM theme_settings;');
-  await db.exec('DELETE FROM website_settings;');
-  await db.exec('DELETE FROM users;');
-  await db.exec('DELETE FROM resorts;');
+  console.log('🌱 Starting initial database seeding with real Lexur Green Serviced Villa...');
 
   const superAdminPasswordHash = await bcrypt.hash('lock@Jyothika5816', 10);
   const akashPasswordHash = await bcrypt.hash('8606778603', 10);

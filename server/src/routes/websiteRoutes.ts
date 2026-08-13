@@ -29,32 +29,43 @@ router.get('/settings', async (req: AuthenticatedRequest, res: Response) => {
   }
 });
 
-// PUT /api/website/profile - Update resort metadata & profile info
+// PUT /api/website/profile - Update resort metadata & profile info safely
 router.put('/profile', async (req: AuthenticatedRequest, res: Response) => {
   try {
     const { name, tagline, short_description, full_description, logo_url, favicon_url, hero_image_url, about_image_url } = req.body;
     const db = await getDb();
 
-    if (name) {
-      await db.run('UPDATE resorts SET name = ? WHERE id = ?', [name, req.tenantResortId]);
+    if (name && name.trim()) {
+      await db.run('UPDATE resorts SET name = ? WHERE id = ?', [name.trim(), req.tenantResortId]);
     }
+
+    const current = await db.get('SELECT * FROM website_settings WHERE resort_id = ?', [req.tenantResortId]);
+
+    const finalLogo = (logo_url !== undefined && logo_url !== null && logo_url !== '') ? logo_url : (current?.logo_url || null);
+    const finalFavicon = (favicon_url !== undefined && favicon_url !== null && favicon_url !== '') ? favicon_url : (current?.favicon_url || null);
+    const finalHeroImage = (hero_image_url !== undefined && hero_image_url !== null && hero_image_url !== '') ? hero_image_url : (current?.hero_image_url || null);
+    const finalAboutImage = (about_image_url !== undefined && about_image_url !== null && about_image_url !== '') ? about_image_url : (current?.about_image_url || null);
+    const finalTagline = (tagline !== undefined && tagline !== null && tagline !== '') ? tagline : (current?.tagline || null);
+    const finalShortDesc = (short_description !== undefined && short_description !== null && short_description !== '') ? short_description : (current?.short_description || null);
+    const finalFullDesc = (full_description !== undefined && full_description !== null && full_description !== '') ? full_description : (current?.full_description || null);
 
     await db.run(
       `UPDATE website_settings SET
-        tagline = COALESCE(?, tagline),
-        short_description = COALESCE(?, short_description),
-        full_description = COALESCE(?, full_description),
-        logo_url = COALESCE(?, logo_url),
-        favicon_url = COALESCE(?, favicon_url),
-        hero_image_url = COALESCE(?, hero_image_url),
-        about_image_url = COALESCE(?, about_image_url),
+        tagline = ?,
+        short_description = ?,
+        full_description = ?,
+        logo_url = ?,
+        favicon_url = ?,
+        hero_image_url = ?,
+        about_image_url = ?,
         updated_at = CURRENT_TIMESTAMP
        WHERE resort_id = ?`,
-      [tagline, short_description, full_description, logo_url, favicon_url, hero_image_url, about_image_url, req.tenantResortId]
+      [finalTagline, finalShortDesc, finalFullDesc, finalLogo, finalFavicon, finalHeroImage, finalAboutImage, req.tenantResortId]
     );
 
     res.json({ message: 'Resort profile updated' });
   } catch (err: any) {
+    console.error('Update profile error:', err);
     res.status(500).json({ error: 'Failed to update resort profile' });
   }
 });
