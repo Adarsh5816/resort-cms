@@ -7,44 +7,35 @@ import { authenticateToken, AuthenticatedRequest } from '../middleware/auth';
 
 const router = Router();
 
-const uploadDir = path.join(__dirname, '../../uploads');
-if (!fs.existsSync(uploadDir)) {
-  fs.mkdirSync(uploadDir, { recursive: true });
-}
-
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    cb(null, uploadDir);
-  },
-  filename: (req, file, cb) => {
-    const ext = path.extname(file.originalname);
-    cb(null, `${uuidv4()}${ext}`);
-  }
-});
+// Use memory storage so uploaded images are converted into permanent Data URLs stored directly in database, immune to container restarts
+const storage = multer.memoryStorage();
 
 const upload = multer({
   storage,
   limits: { fileSize: 10 * 1024 * 1024 }, // 10 MB limit
   fileFilter: (req, file, cb) => {
-    const allowed = ['image/jpeg', 'image/png', 'image/webp', 'image/jpg', 'image/gif'];
+    const allowed = ['image/jpeg', 'image/png', 'image/webp', 'image/jpg', 'image/gif', 'image/svg+xml'];
     if (allowed.includes(file.mimetype)) {
       cb(null, true);
     } else {
-      cb(new Error('Invalid image format. Allowed: JPG, PNG, WebP, GIF'));
+      cb(new Error('Invalid image format. Allowed: JPG, PNG, WebP, GIF, SVG'));
     }
   }
 });
 
-// POST /api/upload - Single image upload
+// POST /api/upload - Single image upload (Encodes as permanent Data URL)
 router.post('/', authenticateToken, upload.single('file'), (req: AuthenticatedRequest, res: Response) => {
   try {
     if (!req.file) {
       return res.status(400).json({ error: 'No file uploaded' });
     }
-    const fileUrl = `/uploads/${req.file.filename}`;
-    res.json({ url: fileUrl, filename: req.file.filename });
+    const mime = req.file.mimetype;
+    const base64 = req.file.buffer.toString('base64');
+    const dataUrl = `data:${mime};base64,${base64}`;
+    res.json({ url: dataUrl, filename: req.file.originalname });
   } catch (err: any) {
-    res.status(500).json({ error: 'Failed to upload image' });
+    console.error('Upload error:', err);
+    res.status(500).json({ error: 'Failed to process image upload' });
   }
 });
 
@@ -55,10 +46,15 @@ router.post('/multiple', authenticateToken, upload.array('files', 10), (req: Aut
     if (!files || files.length === 0) {
       return res.status(400).json({ error: 'No files uploaded' });
     }
-    const fileUrls = files.map(f => `/uploads/${f.filename}`);
-    res.json({ urls: fileUrls });
+    const dataUrls = files.map(f => {
+      const mime = f.mimetype;
+      const base64 = f.buffer.toString('base64');
+      return `data:${mime};base64,${base64}`;
+    });
+    res.json({ urls: dataUrls });
   } catch (err: any) {
-    res.status(500).json({ error: 'Failed to upload images' });
+    console.error('Multiple upload error:', err);
+    res.status(500).json({ error: 'Failed to process image uploads' });
   }
 });
 
