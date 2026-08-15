@@ -369,7 +369,38 @@ export const InvoiceManagement: React.FC = () => {
       {/* PRINTABLE / PDF INVOICE VIEW MODAL */}
       {selectedInvoiceForPrint && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/85 backdrop-blur-md overflow-y-auto">
-          <div className="relative w-full max-w-2xl bg-white text-gray-900 rounded-2xl shadow-2xl p-8 space-y-6 my-8 print:p-0 print:shadow-none print:w-full print:max-w-none">
+          <style>{`
+            @media print {
+              /* Hide all background admin UI, headers, sidebars, preview bars */
+              body * {
+                visibility: hidden !important;
+              }
+              /* Show ONLY the invoice content */
+              #printable-invoice-area, #printable-invoice-area * {
+                visibility: visible !important;
+              }
+              #printable-invoice-area {
+                position: absolute !important;
+                left: 0 !important;
+                top: 0 !important;
+                width: 100% !important;
+                margin: 0 !important;
+                padding: 0 !important;
+                background: white !important;
+                box-shadow: none !important;
+                border: none !important;
+              }
+              .print\\:hidden {
+                display: none !important;
+              }
+              @page {
+                size: auto;
+                margin: 8mm 12mm 8mm 12mm;
+              }
+            }
+          `}</style>
+          
+          <div id="printable-invoice-area" className="relative w-full max-w-2xl bg-white text-gray-900 rounded-2xl shadow-2xl p-8 space-y-6 my-8 print:p-0 print:shadow-none print:w-full print:max-w-none">
             {/* Modal Controls (Hidden during print) */}
             <div className="flex items-center justify-between border-b pb-4 print:hidden">
               <span className="text-xs font-bold uppercase tracking-wider text-gray-500">Official Guest Invoice</span>
