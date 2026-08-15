@@ -13,6 +13,7 @@ import {
   UtensilsCrossed,
   MessageSquare,
   Mail,
+  FileText,
   Palette,
   Eye,
   LogOut,
@@ -45,6 +46,7 @@ export const AdminLayout: React.FC = () => {
     { label: 'Restaurant & Menu', path: '/admin/restaurant', icon: UtensilsCrossed },
     { label: 'Testimonials', path: '/admin/testimonials', icon: MessageSquare },
     { label: 'Enquiries', path: '/admin/enquiries', icon: Mail },
+    { label: 'Invoices & Billing', path: '/admin/invoices', icon: FileText },
   ];
 
   return (

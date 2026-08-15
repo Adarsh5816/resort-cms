@@ -302,5 +302,31 @@ export async function initSchema() {
     );
   `);
 
+  // 19. Invoices Table
+  await db.exec(`
+    CREATE TABLE IF NOT EXISTS invoices (
+      id TEXT PRIMARY KEY,
+      resort_id TEXT NOT NULL,
+      invoice_number TEXT UNIQUE NOT NULL,
+      guest_name TEXT NOT NULL,
+      guest_email TEXT,
+      guest_phone TEXT,
+      room_name TEXT,
+      check_in_date TEXT,
+      check_out_date TEXT,
+      num_nights INTEGER DEFAULT 1,
+      rate_per_night REAL DEFAULT 0,
+      additional_charges REAL DEFAULT 0,
+      tax_amount REAL DEFAULT 0,
+      discount_amount REAL DEFAULT 0,
+      total_amount REAL NOT NULL,
+      payment_status TEXT DEFAULT 'PENDING',
+      payment_method TEXT DEFAULT 'UPI / GPay',
+      notes TEXT,
+      created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+      FOREIGN KEY (resort_id) REFERENCES resorts(id) ON DELETE CASCADE
+    );
+  `);
+
   console.log('✅ Database schema initialized successfully.');
 }

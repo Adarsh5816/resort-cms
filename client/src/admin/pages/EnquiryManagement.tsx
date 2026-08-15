@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { apiRequest } from '../../services/api';
 import { Enquiry } from '../../types';
-import { Mail, Phone, Calendar, User, MessageSquare, CheckCircle, XCircle, Clock } from 'lucide-react';
+import { Mail, Phone, Calendar, User, MessageSquare, CheckCircle, XCircle, Clock, FileText } from 'lucide-react';
 
 export const EnquiryManagement: React.FC = () => {
+  const navigate = useNavigate();
   const [enquiries, setEnquiries] = useState<Enquiry[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -96,6 +98,34 @@ export const EnquiryManagement: React.FC = () => {
                     <option value="CANCELLED">Set CANCELLED</option>
                     <option value="CLOSED">Set CLOSED</option>
                   </select>
+
+                  <button
+                    onClick={async () => {
+                      try {
+                        await apiRequest('/invoices', {
+                          method: 'POST',
+                          body: {
+                            guest_name: enquiry.guest_name,
+                            guest_email: enquiry.email,
+                            guest_phone: enquiry.phone,
+                            room_name: enquiry.room_preference || '3BHK Private Serviced Villa',
+                            check_in_date: enquiry.check_in,
+                            check_out_date: enquiry.check_out,
+                            num_nights: 1,
+                            rate_per_night: 5999,
+                            payment_status: 'PAID'
+                          }
+                        });
+                        navigate('/admin/invoices');
+                      } catch (err: any) {
+                        alert(err.message || 'Failed to generate invoice');
+                      }
+                    }}
+                    className="px-3 py-1 text-xs bg-emerald-600/20 hover:bg-emerald-600/30 text-emerald-400 border border-emerald-500/30 font-semibold rounded-lg flex items-center gap-1 transition-colors"
+                  >
+                    <FileText className="w-3.5 h-3.5" />
+                    <span>Create Invoice</span>
+                  </button>
                 </div>
               </div>
 

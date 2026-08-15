@@ -198,6 +198,30 @@ export interface Enquiry {
   created_at: string;
 }
 
+export interface Invoice {
+  id: string;
+  resort_id?: string;
+  resort_name?: string;
+  custom_domain?: string;
+  invoice_number: string;
+  guest_name: string;
+  guest_email?: string | null;
+  guest_phone?: string | null;
+  room_name?: string | null;
+  check_in_date?: string | null;
+  check_out_date?: string | null;
+  num_nights: number;
+  rate_per_night: number;
+  additional_charges: number;
+  tax_amount: number;
+  discount_amount: number;
+  total_amount: number;
+  payment_status: 'PAID' | 'PENDING' | 'PARTIAL' | 'CANCELLED';
+  payment_method: string;
+  notes?: string | null;
+  created_at: string;
+}
+
 export interface PublicSiteData {
   resort: Resort;
   settings: WebsiteSettings;

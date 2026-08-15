@@ -16,6 +16,7 @@ import testimonialRoutes from './routes/testimonialRoutes';
 import enquiryRoutes from './routes/enquiryRoutes';
 import websiteRoutes from './routes/websiteRoutes';
 import uploadRoutes from './routes/uploadRoutes';
+import invoiceRoutes from './routes/invoiceRoutes';
 import { seedDatabase } from './db/seed';
 
 dotenv.config();
@@ -43,6 +44,7 @@ app.use('/api/attractions', attractionRoutes);
 app.use('/api/restaurant', restaurantRoutes);
 app.use('/api/testimonials', testimonialRoutes);
 app.use('/api/enquiries', enquiryRoutes);
+app.use('/api/invoices', invoiceRoutes);
 app.use('/api/website', websiteRoutes);
 app.use('/api/upload', uploadRoutes);
 

@@ -20,6 +20,7 @@ import { AttractionManagement } from './admin/pages/AttractionManagement';
 import { RestaurantManagement } from './admin/pages/RestaurantManagement';
 import { TestimonialManagement } from './admin/pages/TestimonialManagement';
 import { EnquiryManagement } from './admin/pages/EnquiryManagement';
+import { InvoiceManagement } from './admin/pages/InvoiceManagement';
 import { WebsiteCustomizer } from './admin/pages/WebsiteCustomizer';
 
 const ProtectedRoute: React.FC<{ children: React.ReactNode }> = ({ children }) => {
@@ -76,6 +77,7 @@ export const App: React.FC = () => {
               <Route path="restaurant" element={<RestaurantManagement />} />
               <Route path="testimonials" element={<TestimonialManagement />} />
               <Route path="enquiries" element={<EnquiryManagement />} />
+              <Route path="invoices" element={<InvoiceManagement />} />
             </Route>
 
             {/* Catch All */}
