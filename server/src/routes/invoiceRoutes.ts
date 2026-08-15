@@ -54,10 +54,18 @@ router.post('/', async (req: AuthenticatedRequest, res: Response) => {
     const db = await getDb();
     const resortId = req.tenantResortId;
 
-    // Generate unique invoice number e.g. INV-LEX-2026-8492
-    const randomCode = Math.floor(1000 + Math.random() * 9000);
-    const datePrefix = new Date().getFullYear();
-    const invoiceNumber = `INV-${datePrefix}-${randomCode}`;
+    // Generate sequential invoice number e.g. INV-2026-0001, INV-2026-0002...
+    const currentYear = new Date().getFullYear();
+    const prefix = `INV-${currentYear}-`;
+
+    const countResult = await db.get(
+      `SELECT COUNT(*) as count FROM invoices WHERE resort_id = ? AND invoice_number LIKE ?`,
+      [resortId, `${prefix}%`]
+    );
+
+    const nextSeq = (countResult?.count || 0) + 1;
+    const seqString = String(nextSeq).padStart(4, '0');
+    const invoiceNumber = `${prefix}${seqString}`;
 
     const nights = parseInt(num_nights) || 1;
     const rate = parseFloat(rate_per_night) || 0;
