@@ -55,17 +55,16 @@ app.get('/api/health', (req, res) => {
 
 // Boot Database and Express Server
 async function startServer() {
+  console.log('🚀 Initializing database...');
   try {
-    console.log('🚀 Initializing database...');
     await seedDatabase();
-    
-    app.listen(PORT, () => {
-      console.log(`✅ Multi-Tenant Resort CMS Server running on http://localhost:${PORT}`);
-    });
   } catch (err) {
-    console.error('❌ Server startup error:', err);
-    process.exit(1);
+    console.warn('⚠️ Database initialization notice:', err);
   }
+  
+  app.listen(PORT, () => {
+    console.log(`✅ Multi-Tenant Resort CMS Server running on http://localhost:${PORT}`);
+  });
 }
 
 startServer();
