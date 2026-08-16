@@ -237,6 +237,36 @@ export const KeralaNatureTheme: React.FC<{ data: PublicSiteData }> = ({ data }) 
           </section>
         );
 
+      case 'gallery': {
+        const images = gallery?.images || [];
+        return (
+          <section key={secKey} id="gallery" className="py-24 bg-[#EFE8D8] text-stone-900">
+            <div className="max-w-7xl mx-auto px-6 space-y-12">
+              <div className="text-center space-y-3">
+                <span className="text-amber-800 font-serif italic text-sm">
+                  {subtitle || 'Natural Memories'}
+                </span>
+                <h2 className="text-3xl md:text-5xl font-serif font-bold text-stone-900">
+                  {title || 'Photo Gallery'}
+                </h2>
+              </div>
+
+              {images.length > 0 ? (
+                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+                  {images.map((img: any) => (
+                    <div key={img.id} className="rounded-2xl overflow-hidden border border-amber-900/10 shadow-md aspect-[4/3]">
+                      <img src={img.image_url} alt={img.title || 'Resort Photo'} className="w-full h-full object-cover hover:scale-105 transition-transform" />
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <p className="text-center text-stone-500 font-serif text-sm italic">Gallery images coming soon.</p>
+              )}
+            </div>
+          </section>
+        );
+      }
+
       case 'contact':
         return (
           <section key={secKey} id="contact" className="py-24 bg-stone-950 text-amber-50">

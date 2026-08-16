@@ -18,12 +18,26 @@ interface TenantContextType {
 
 const TenantContext = createContext<TenantContextType | undefined>(undefined);
 
+const getInitialResortSlug = () => {
+  if (typeof window !== 'undefined') {
+    const params = new URLSearchParams(window.location.search);
+    const slugFromUrl = params.get('resort');
+    if (slugFromUrl) return slugFromUrl;
+
+    const hostname = window.location.hostname;
+    if (hostname.includes('lexur')) return 'lexur-green';
+    if (hostname.includes('grand')) return 'grand-royal';
+    if (hostname.includes('metro')) return 'metrostar-hotel';
+  }
+  return 'lexur-green';
+};
+
 export const TenantProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [siteData, setSiteData] = useState<PublicSiteData | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [availableResorts, setAvailableResorts] = useState<Resort[]>([]);
-  const [activeResortSlug, setActiveResortSlug] = useState<string>('lexur-green');
+  const [activeResortSlug, setActiveResortSlug] = useState<string>(getInitialResortSlug);
   const [selectedRoomForBooking, setSelectedRoomForBooking] = useState<any | null>(null);
   const [isEnquiryModalOpen, setIsEnquiryModalOpen] = useState(false);
 

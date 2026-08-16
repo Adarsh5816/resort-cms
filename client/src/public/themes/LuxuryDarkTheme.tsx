@@ -16,9 +16,10 @@ export const LuxuryDarkTheme: React.FC<{ data: PublicSiteData }> = ({ data }) =>
     setIsEnquiryModalOpen(true);
   };
 
+  const galleryImages = gallery?.images || [];
   const filteredGallery = activeGalleryCat
-    ? gallery.images.filter(img => img.category_id === activeGalleryCat)
-    : gallery.images;
+    ? galleryImages.filter(img => img.category_id === activeGalleryCat)
+    : galleryImages;
 
   // Render individual sections based on section_key
   const renderSection = (secKey: string, title?: string | null, subtitle?: string | null) => {

@@ -7,12 +7,30 @@ import { LexurLogo } from '../components/LexurLogo';
 import { getFullImageUrl } from '../../services/api';
 import {
   Trees, Compass, Home, Utensils, Wifi, Car, Flame, Shield, MapPin, Phone, Mail,
-  Star, CheckCircle2, ChevronRight, Sparkles, Moon
+  Star, CheckCircle2, ChevronRight, Sparkles, Moon, Menu, X, Image as ImageIcon
 } from 'lucide-react';
 
 export const LexurForestTheme: React.FC<{ data: PublicSiteData }> = ({ data }) => {
-  const { resort, settings, theme, sections, rooms, amenities, gallery, experiences, attractions, restaurantItems, testimonials, contact } = data;
+  const {
+    resort = { name: 'Lexur Green Serviced Villa' },
+    settings = {},
+    theme = {} as any,
+    sections = [],
+    rooms = [],
+    amenities = [],
+    gallery = { categories: [], images: [] },
+    experiences = [],
+    attractions = [],
+    restaurantItems = [],
+    testimonials = [],
+    contact = {}
+  } = data || {};
+
   const { setIsEnquiryModalOpen, setSelectedRoomForBooking } = useTenant();
+
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [activeGalleryCat, setActiveGalleryCat] = useState<string | null>(null);
+  const [activeLightboxImg, setActiveLightboxImg] = useState<string | null>(null);
 
   const heroOpacity = theme?.hero_overlay_opacity !== undefined ? theme.hero_overlay_opacity : 0.65;
 
@@ -25,12 +43,12 @@ export const LexurForestTheme: React.FC<{ data: PublicSiteData }> = ({ data }) =
     switch (secKey) {
       case 'hero':
         return (
-          <section key={secKey} className="relative min-h-[92vh] flex items-center justify-center bg-[#071F13] text-white overflow-hidden pt-12">
+          <section key={secKey} className="relative min-h-[90vh] md:min-h-[92vh] flex items-center justify-center bg-[#071F13] text-white overflow-hidden pt-12">
             {/* Background Forest Image with Deep Forest Emerald Overlay */}
             <div className="absolute inset-0 z-0">
               <img
                 src={getFullImageUrl(settings.hero_image_url || rooms[0]?.primary_image || 'https://images.unsplash.com/photo-1580587771525-78b9dba3b914?w=1600&q=80')}
-                alt="Lexur Green Villa"
+                alt={resort.name || 'Lexur Green Villa'}
                 className="w-full h-full object-cover scale-105"
               />
               <div
@@ -39,53 +57,53 @@ export const LexurForestTheme: React.FC<{ data: PublicSiteData }> = ({ data }) =
               />
             </div>
 
-            <div className="relative z-10 max-w-5xl px-6 text-center space-y-6 pt-16">
+            <div className="relative z-10 max-w-5xl px-4 sm:px-6 text-center space-y-6 pt-12 md:pt-16">
               {/* Forest Border Badge */}
-              <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-emerald-950/80 border border-emerald-500/40 text-emerald-300 text-xs font-semibold uppercase tracking-widest shadow-2xl backdrop-blur-md">
-                <Trees className="w-4 h-4 text-emerald-400" />
+              <div className="inline-flex items-center gap-2 px-3 sm:px-4 py-1.5 sm:py-2 rounded-full bg-emerald-950/80 border border-emerald-500/40 text-emerald-300 text-[10px] sm:text-xs font-semibold uppercase tracking-widest shadow-2xl backdrop-blur-md">
+                <Trees className="w-3.5 sm:w-4 h-3.5 sm:h-4 text-emerald-400" />
                 <span>Valluvady Forest Border • Wayanad, Kerala</span>
               </div>
 
-              <h1 className="text-4xl md:text-6xl font-serif font-bold text-emerald-50 tracking-tight leading-tight">
+              <h1 className="text-3xl sm:text-5xl md:text-6xl font-serif font-bold text-emerald-50 tracking-tight leading-tight">
                 {title || 'Lexur Green Serviced Villa'}
               </h1>
 
-              <p className="text-lg md:text-2xl text-emerald-100 font-serif italic max-w-3xl mx-auto leading-relaxed">
+              <p className="text-base sm:text-xl md:text-2xl text-emerald-100 font-serif italic max-w-3xl mx-auto leading-relaxed">
                 "{subtitle || 'Experience the real feel of being deep into nature right near the forest border.'}"
               </p>
 
               {/* Business Card Quick Features Bar */}
-              <div className="pt-2 flex flex-wrap justify-center gap-2 text-xs font-semibold text-emerald-200">
-                <span className="px-3 py-1.5 bg-[#0F3822]/90 border border-emerald-600/30 rounded-lg">🏡 3BHK Private Villa</span>
-                <span className="px-3 py-1.5 bg-[#0F3822]/90 border border-emerald-600/30 rounded-lg">🍳 Fully Equipped Kitchen</span>
-                <span className="px-3 py-1.5 bg-[#0F3822]/90 border border-emerald-600/30 rounded-lg">🐅 Night Jungle Safari</span>
-                <span className="px-3 py-1.5 bg-[#0F3822]/90 border border-emerald-600/30 rounded-lg">🚗 Secure Parking</span>
-                <span className="px-3 py-1.5 bg-[#0F3822]/90 border border-emerald-600/30 rounded-lg">📶 Free Wi-Fi</span>
-                <span className="px-3 py-1.5 bg-[#0F3822]/90 border border-emerald-600/30 rounded-lg">🍲 Homely Food on Order</span>
+              <div className="pt-2 flex flex-wrap justify-center gap-1.5 sm:gap-2 text-[11px] sm:text-xs font-semibold text-emerald-200">
+                <span className="px-2.5 py-1.5 bg-[#0F3822]/90 border border-emerald-600/30 rounded-lg">🏡 3BHK Private Villa</span>
+                <span className="px-2.5 py-1.5 bg-[#0F3822]/90 border border-emerald-600/30 rounded-lg">🍳 Fully Equipped Kitchen</span>
+                <span className="px-2.5 py-1.5 bg-[#0F3822]/90 border border-emerald-600/30 rounded-lg">🐅 Night Jungle Safari</span>
+                <span className="px-2.5 py-1.5 bg-[#0F3822]/90 border border-emerald-600/30 rounded-lg">🚗 Secure Parking</span>
+                <span className="px-2.5 py-1.5 bg-[#0F3822]/90 border border-emerald-600/30 rounded-lg">📶 Free Wi-Fi</span>
+                <span className="px-2.5 py-1.5 bg-[#0F3822]/90 border border-emerald-600/30 rounded-lg">🍲 Homely Food on Order</span>
               </div>
 
-              <div className="pt-6 flex flex-wrap items-center justify-center gap-4">
+              <div className="pt-4 sm:pt-6 flex flex-wrap items-center justify-center gap-3 sm:gap-4">
                 <button
                   onClick={() => setIsEnquiryModalOpen(true)}
-                  className="px-8 py-4 bg-gradient-to-r from-emerald-600 to-emerald-700 hover:from-emerald-700 hover:to-emerald-800 text-white font-bold text-sm uppercase tracking-wider rounded-xl shadow-2xl transition-transform hover:scale-105"
+                  className="w-full sm:w-auto px-8 py-4 bg-gradient-to-r from-emerald-600 to-emerald-700 hover:from-emerald-700 hover:to-emerald-800 text-white font-bold text-sm uppercase tracking-wider rounded-xl shadow-2xl transition-transform hover:scale-105"
                 >
                   Book 3BHK Villa Stay
                 </button>
                 <WhatsAppCTA
                   number={contact.whatsapp_number || '918078776634'}
                   resortName={resort.name}
-                  className="px-6 py-4 bg-emerald-950/90 hover:bg-emerald-900 border border-emerald-500/40 text-emerald-200 font-semibold text-sm rounded-xl shadow-xl"
+                  className="w-full sm:w-auto px-6 py-4 bg-emerald-950/90 hover:bg-emerald-900 border border-emerald-500/40 text-emerald-200 font-semibold text-sm rounded-xl shadow-xl flex items-center justify-center"
                   label="Chat on WhatsApp: 8078 77 66 34"
                 />
               </div>
 
               {/* Business Card OTA Badges */}
-              <div className="pt-8 border-t border-emerald-900/60 max-w-2xl mx-auto flex flex-wrap items-center justify-center gap-6 opacity-90">
-                <span className="text-[11px] uppercase tracking-wider text-emerald-400 font-semibold">Available On:</span>
-                <span className="px-3 py-1 bg-red-950/40 border border-red-500/30 text-red-300 text-xs font-bold rounded">make my trip</span>
-                <span className="px-3 py-1 bg-blue-950/40 border border-blue-500/30 text-blue-300 text-xs font-bold rounded">Booking.com</span>
-                <span className="px-3 py-1 bg-rose-950/40 border border-rose-500/30 text-rose-300 text-xs font-bold rounded">airbnb</span>
-                <span className="px-3 py-1 bg-amber-950/40 border border-amber-500/30 text-amber-300 text-xs font-bold rounded">agoda</span>
+              <div className="pt-6 sm:pt-8 border-t border-emerald-900/60 max-w-2xl mx-auto flex flex-wrap items-center justify-center gap-3 sm:gap-6 opacity-90">
+                <span className="text-[10px] sm:text-[11px] uppercase tracking-wider text-emerald-400 font-semibold">Available On:</span>
+                <span className="px-2.5 py-1 bg-red-950/40 border border-red-500/30 text-red-300 text-[10px] sm:text-xs font-bold rounded">make my trip</span>
+                <span className="px-2.5 py-1 bg-blue-950/40 border border-blue-500/30 text-blue-300 text-[10px] sm:text-xs font-bold rounded">Booking.com</span>
+                <span className="px-2.5 py-1 bg-rose-950/40 border border-rose-500/30 text-rose-300 text-[10px] sm:text-xs font-bold rounded">airbnb</span>
+                <span className="px-2.5 py-1 bg-amber-950/40 border border-amber-500/30 text-amber-300 text-[10px] sm:text-xs font-bold rounded">agoda</span>
               </div>
             </div>
           </section>
@@ -93,8 +111,8 @@ export const LexurForestTheme: React.FC<{ data: PublicSiteData }> = ({ data }) =
 
       case 'about':
         return (
-          <section key={secKey} id="about" className="py-24 bg-[#F4EFE6] text-stone-900">
-            <div className="max-w-7xl mx-auto px-6 grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+          <section key={secKey} id="about" className="py-16 md:py-24 bg-[#F4EFE6] text-stone-900">
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center">
               <div className="space-y-6">
                 <div className="inline-flex items-center gap-2 px-3 py-1 bg-emerald-900/10 text-emerald-900 border border-emerald-900/20 rounded-full text-xs font-serif font-bold">
                   <Trees className="w-3.5 h-3.5 text-emerald-800" />
@@ -106,11 +124,11 @@ export const LexurForestTheme: React.FC<{ data: PublicSiteData }> = ({ data }) =
                 </h2>
 
                 <p className="text-stone-700 leading-relaxed font-serif text-base">
-                  {settings.full_description || settings.short_description}
+                  {settings.full_description || settings.short_description || 'Lexur Green Serviced Villa is located at Valluvady right near the forest border in Wayanad, offering a private 3BHK stay experience surrounded by lush greenery and nocturnal wildlife.'}
                 </p>
 
                 {/* Card Features List */}
-                <div className="grid grid-cols-2 gap-4 pt-4 border-t border-emerald-900/10">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-4 border-t border-emerald-900/10">
                   <div className="p-4 bg-[#EBE4D5] rounded-xl border border-emerald-900/10 space-y-1">
                     <p className="font-serif font-bold text-emerald-950 text-sm">🏡 3BHK Private Villa</p>
                     <p className="text-xs text-stone-600">Exclusive privacy for family & friend groups.</p>
@@ -135,7 +153,7 @@ export const LexurForestTheme: React.FC<{ data: PublicSiteData }> = ({ data }) =
                 <img
                   src={getFullImageUrl(settings.about_image_url || rooms[0]?.primary_image || 'https://images.unsplash.com/photo-1580587771525-78b9dba3b914?w=800&q=80')}
                   alt="Lexur Green Serviced Villa"
-                  className="relative rounded-2xl shadow-2xl object-cover w-full h-[480px] border-4 border-emerald-900/30"
+                  className="relative rounded-2xl shadow-2xl object-cover w-full h-[360px] sm:h-[480px] border-4 border-emerald-900/30"
                 />
               </div>
             </div>
@@ -144,14 +162,14 @@ export const LexurForestTheme: React.FC<{ data: PublicSiteData }> = ({ data }) =
 
       case 'experiences':
         return (
-          <section key={secKey} id="experiences" className="py-24 bg-[#071F13] text-white">
-            <div className="max-w-7xl mx-auto px-6">
-              <div className="text-center space-y-3 mb-16">
+          <section key={secKey} id="experiences" className="py-16 md:py-24 bg-[#071F13] text-white border-t border-emerald-950">
+            <div className="max-w-7xl mx-auto px-4 sm:px-6">
+              <div className="text-center space-y-3 mb-12 sm:mb-16">
                 <span className="text-emerald-400 text-xs font-semibold uppercase tracking-widest">
                   {subtitle || 'Valluvady Forest Adventures'}
                 </span>
                 <h2 className="text-3xl md:text-5xl font-serif font-bold text-emerald-50">
-                  {title || 'Night Jungle Safari & Forest Border Trails'}
+                  {title || 'Night Jungle Safari & Forest Trails'}
                 </h2>
               </div>
 
@@ -159,7 +177,7 @@ export const LexurForestTheme: React.FC<{ data: PublicSiteData }> = ({ data }) =
                 {experiences.map((exp: any) => (
                   <div key={exp.id} className="bg-[#0D2E1D] rounded-2xl overflow-hidden border border-emerald-800/40 shadow-2xl flex flex-col">
                     {exp.image_url && (
-                      <img src={getFullImageUrl(exp.image_url)} alt={exp.title} className="w-full h-64 object-cover" />
+                      <img src={getFullImageUrl(exp.image_url)} alt={exp.title} className="w-full h-56 sm:h-64 object-cover" />
                     )}
                     <div className="p-6 space-y-3 flex-1 flex flex-col justify-between">
                       <div>
@@ -173,7 +191,7 @@ export const LexurForestTheme: React.FC<{ data: PublicSiteData }> = ({ data }) =
 
                       <button
                         onClick={() => setIsEnquiryModalOpen(true)}
-                        className="w-full py-2.5 bg-emerald-700 hover:bg-emerald-600 text-white font-bold text-xs uppercase tracking-wider rounded-lg transition-colors mt-4"
+                        className="w-full py-3 bg-emerald-700 hover:bg-emerald-600 text-white font-bold text-xs uppercase tracking-wider rounded-lg transition-colors mt-4"
                       >
                         Book Safari Experience
                       </button>
@@ -187,9 +205,9 @@ export const LexurForestTheme: React.FC<{ data: PublicSiteData }> = ({ data }) =
 
       case 'rooms':
         return (
-          <section key={secKey} id="rooms" className="py-24 bg-[#EBE4D5] text-stone-900">
-            <div className="max-w-7xl mx-auto px-6">
-              <div className="text-center space-y-3 mb-16">
+          <section key={secKey} id="rooms" className="py-16 md:py-24 bg-[#EBE4D5] text-stone-900">
+            <div className="max-w-7xl mx-auto px-4 sm:px-6">
+              <div className="text-center space-y-3 mb-12 sm:mb-16">
                 <span className="text-emerald-900 font-serif font-bold text-xs uppercase tracking-widest">
                   {subtitle || 'Serviced Villa Accommodations'}
                 </span>
@@ -245,9 +263,9 @@ export const LexurForestTheme: React.FC<{ data: PublicSiteData }> = ({ data }) =
 
       case 'amenities':
         return (
-          <section key={secKey} id="amenities" className="py-20 bg-[#F4EFE6] text-stone-900">
-            <div className="max-w-7xl mx-auto px-6">
-              <div className="text-center space-y-3 mb-16">
+          <section key={secKey} id="amenities" className="py-16 md:py-20 bg-[#F4EFE6] text-stone-900">
+            <div className="max-w-7xl mx-auto px-4 sm:px-6">
+              <div className="text-center space-y-3 mb-12 sm:mb-16">
                 <span className="text-emerald-900 font-serif font-bold text-xs uppercase tracking-widest">
                   {subtitle || 'Villa Facilities'}
                 </span>
@@ -256,14 +274,14 @@ export const LexurForestTheme: React.FC<{ data: PublicSiteData }> = ({ data }) =
                 </h2>
               </div>
 
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+              <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-4 gap-4 sm:gap-6">
                 {amenities.map((a: any) => (
-                  <div key={a.id} className="p-6 bg-[#EBE4D5] border border-emerald-900/10 rounded-2xl text-center space-y-3 shadow-sm hover:shadow-md transition-shadow">
+                  <div key={a.id} className="p-5 sm:p-6 bg-[#EBE4D5] border border-emerald-900/10 rounded-2xl text-center space-y-2.5 shadow-sm hover:shadow-md transition-shadow">
                     <div className="w-12 h-12 bg-[#071F13] text-emerald-400 rounded-2xl flex items-center justify-center mx-auto shadow-md">
                       <IconHelper name={a.icon_name} className="w-6 h-6" />
                     </div>
                     <h4 className="text-sm font-serif font-bold text-emerald-950">{a.name}</h4>
-                    <p className="text-xs text-stone-600">{a.description}</p>
+                    <p className="text-xs text-stone-600 line-clamp-2">{a.description}</p>
                   </div>
                 ))}
               </div>
@@ -271,12 +289,105 @@ export const LexurForestTheme: React.FC<{ data: PublicSiteData }> = ({ data }) =
           </section>
         );
 
+      case 'gallery': {
+        const categories = gallery?.categories || [];
+        const images = gallery?.images || [];
+        const filteredImages = activeGalleryCat
+          ? images.filter((img: any) => img.category_id === activeGalleryCat)
+          : images;
+
+        return (
+          <section key={secKey} id="gallery" className="py-16 md:py-24 bg-[#05180E] text-white border-t border-emerald-950">
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 space-y-10">
+              <div className="text-center space-y-3">
+                <span className="text-emerald-400 font-serif font-bold text-xs uppercase tracking-widest">
+                  {subtitle || 'Valluvady Forest Moments'}
+                </span>
+                <h2 className="text-3xl md:text-5xl font-serif font-bold text-emerald-50">
+                  {title || 'Lexur Green Photo Gallery'}
+                </h2>
+              </div>
+
+              {categories.length > 0 && (
+                <div className="flex flex-wrap items-center justify-center gap-2 md:gap-3">
+                  <button
+                    onClick={() => setActiveGalleryCat(null)}
+                    className={`px-4 py-2 text-xs font-semibold rounded-full border transition-all ${
+                      activeGalleryCat === null
+                        ? 'bg-emerald-600 text-white border-emerald-500 shadow-lg'
+                        : 'bg-[#0D2E1D] text-emerald-300 border-emerald-900/60 hover:border-emerald-500/40'
+                    }`}
+                  >
+                    All Photos
+                  </button>
+                  {categories.map((cat: any) => (
+                    <button
+                      key={cat.id}
+                      onClick={() => setActiveGalleryCat(cat.id)}
+                      className={`px-4 py-2 text-xs font-semibold rounded-full border transition-all ${
+                        activeGalleryCat === cat.id
+                          ? 'bg-emerald-600 text-white border-emerald-500 shadow-lg'
+                          : 'bg-[#0D2E1D] text-emerald-300 border-emerald-900/60 hover:border-emerald-500/40'
+                      }`}
+                    >
+                      {cat.name}
+                    </button>
+                  ))}
+                </div>
+              )}
+
+              {filteredImages.length > 0 ? (
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                  {filteredImages.map((img: any) => (
+                    <div
+                      key={img.id}
+                      onClick={() => setActiveLightboxImg(getFullImageUrl(img.image_url))}
+                      className="group relative rounded-2xl overflow-hidden border border-emerald-800/40 bg-[#0D2E1D] aspect-[4/3] shadow-xl cursor-pointer"
+                    >
+                      <img
+                        src={getFullImageUrl(img.image_url)}
+                        alt={img.title || 'Lexur Green Villa'}
+                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                      />
+                      <div className="absolute inset-0 bg-gradient-to-t from-[#071F13] via-transparent to-transparent opacity-90 sm:opacity-0 sm:group-hover:opacity-90 transition-opacity flex items-end p-4">
+                        <span className="text-xs font-serif font-bold text-emerald-200">{img.title || 'Lexur Green Serviced Villa'}</span>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <div className="text-center py-12 text-emerald-300/80 text-sm italic font-serif">
+                  No photos available in this category yet.
+                </div>
+              )}
+            </div>
+
+            {activeLightboxImg && (
+              <div
+                onClick={() => setActiveLightboxImg(null)}
+                className="fixed inset-0 z-50 bg-black/90 backdrop-blur-md flex items-center justify-center p-4 cursor-pointer"
+              >
+                <div className="relative max-w-4xl max-h-[90vh] overflow-hidden rounded-2xl border border-emerald-500/40 shadow-2xl">
+                  <img src={activeLightboxImg} alt="Enlarged" className="w-full h-full object-contain" />
+                  <button
+                    onClick={() => setActiveLightboxImg(null)}
+                    className="absolute top-4 right-4 p-2 bg-black/60 text-white rounded-full hover:bg-emerald-600 transition-colors"
+                  >
+                    ✕
+                  </button>
+                </div>
+              </div>
+            )}
+          </section>
+        );
+      }
+
       case 'restaurant':
         if (restaurantItems.length === 0) return null;
         return (
-          <section key={secKey} id="restaurant" className="py-24 bg-[#071F13] text-white">
-            <div className="max-w-5xl mx-auto px-6">
-              <div className="text-center space-y-3 mb-16">
+          <section key={secKey} id="restaurant" className="py-16 md:py-24 bg-[#071F13] text-white">
+            <div className="max-w-5xl mx-auto px-4 sm:px-6">
+              <div className="text-center space-y-3 mb-12 sm:mb-16">
                 <span className="text-emerald-400 font-serif font-bold text-xs uppercase tracking-widest">
                   {subtitle || 'Homely Kerala Cooking'}
                 </span>
@@ -288,7 +399,7 @@ export const LexurForestTheme: React.FC<{ data: PublicSiteData }> = ({ data }) =
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 {restaurantItems.map((item: any) => (
                   <div key={item.id} className="p-6 bg-[#0D2E1D] border border-emerald-800/40 rounded-2xl flex gap-4 items-center shadow-lg">
-                    {item.image_url && <img src={item.image_url} alt={item.name} className="w-20 h-20 rounded-xl object-cover" />}
+                    {item.image_url && <img src={getFullImageUrl(item.image_url)} alt={item.name} className="w-20 h-20 rounded-xl object-cover" />}
                     <div className="flex-1">
                       <div className="flex justify-between items-baseline">
                         <h4 className="text-base font-serif font-bold text-white">{item.name}</h4>
@@ -305,13 +416,13 @@ export const LexurForestTheme: React.FC<{ data: PublicSiteData }> = ({ data }) =
 
       case 'contact':
         return (
-          <section key={secKey} id="contact" className="py-24 bg-[#05180E] text-white border-t border-emerald-900">
-            <div className="max-w-7xl mx-auto px-6 grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+          <section key={secKey} id="contact" className="py-16 md:py-24 bg-[#05180E] text-white border-t border-emerald-900 pb-28 md:pb-24">
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center">
               <div className="space-y-6">
                 {settings.logo_url ? (
-                  <img src={getFullImageUrl(settings.logo_url)} alt={resort.name} className="h-16 w-auto object-contain" />
+                  <img src={getFullImageUrl(settings.logo_url)} alt={resort.name} className="h-14 sm:h-16 w-auto object-contain" />
                 ) : (
-                  <LexurLogo className="h-16" variant="white" showSubtitle={true} />
+                  <LexurLogo className="h-14 sm:h-16" variant="white" showSubtitle={true} />
                 )}
                 <h2 className="text-3xl md:text-5xl font-serif font-bold text-emerald-50 leading-tight">
                   {title || 'Reserve Your Forest Stay'}
@@ -333,7 +444,7 @@ export const LexurForestTheme: React.FC<{ data: PublicSiteData }> = ({ data }) =
                 </div>
               </div>
 
-              <div className="p-8 bg-[#0D2E1D] border border-emerald-800/60 rounded-3xl space-y-4 shadow-2xl">
+              <div className="p-6 sm:p-8 bg-[#0D2E1D] border border-emerald-800/60 rounded-3xl space-y-4 shadow-2xl">
                 <h3 className="text-xl font-serif font-bold text-emerald-300">Send Direct Enquiry</h3>
                 <p className="text-xs text-emerald-200">Our desk will confirm availability for your preferred dates.</p>
                 <button
@@ -362,15 +473,17 @@ export const LexurForestTheme: React.FC<{ data: PublicSiteData }> = ({ data }) =
   return (
     <div className="min-h-screen bg-[#071F13] text-white font-serif selection:bg-emerald-600 selection:text-white">
       {theme?.custom_css && <style>{theme.custom_css}</style>}
+      
       {/* Lexur Green Header matching Business Card Logo */}
       <header className="sticky top-0 z-40 bg-[#071F13]/95 backdrop-blur-md border-b border-emerald-900/60 shadow-xl">
-        <div className="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 h-20 flex items-center justify-between">
           {settings.logo_url ? (
-            <img src={getFullImageUrl(settings.logo_url)} alt={resort.name} className="h-12 w-auto object-contain" />
+            <img src={getFullImageUrl(settings.logo_url)} alt={resort.name} className="h-10 sm:h-12 w-auto object-contain" />
           ) : (
-            <LexurLogo className="h-12" variant="white" showSubtitle={true} />
+            <LexurLogo className="h-10 sm:h-12" variant="white" showSubtitle={true} />
           )}
 
+          {/* Desktop Navigation */}
           <nav className="hidden md:flex items-center gap-8 text-xs font-bold uppercase tracking-wider text-emerald-100 font-sans">
             {isSecEnabled('about') && <a href="#about" className="hover:text-emerald-400">About</a>}
             {isSecEnabled('rooms') && <a href="#rooms" className="hover:text-emerald-400">Villa & Rooms</a>}
@@ -383,13 +496,65 @@ export const LexurForestTheme: React.FC<{ data: PublicSiteData }> = ({ data }) =
             {isSecEnabled('contact') && <a href="#contact" className="hover:text-emerald-400">Contact</a>}
           </nav>
 
-          <button
-            onClick={() => setIsEnquiryModalOpen(true)}
-            className="px-5 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs uppercase tracking-wider rounded-xl shadow-lg font-sans"
-          >
-            Enquire Stay
-          </button>
+          <div className="flex items-center gap-3">
+            <button
+              onClick={() => setIsEnquiryModalOpen(true)}
+              className="px-4 sm:px-5 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs uppercase tracking-wider rounded-xl shadow-lg font-sans"
+            >
+              Enquire Stay
+            </button>
+
+            {/* Mobile Navigation Toggle */}
+            <button
+              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+              className="md:hidden p-2 text-emerald-300 hover:text-white rounded-lg bg-emerald-950/80 border border-emerald-800/60"
+              aria-label="Toggle Menu"
+            >
+              {isMobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+            </button>
+          </div>
         </div>
+
+        {/* Mobile Navigation Drawer */}
+        {isMobileMenuOpen && (
+          <div className="md:hidden bg-[#05180E] border-b border-emerald-900 px-6 py-6 space-y-4 font-sans text-sm font-semibold uppercase tracking-wider text-emerald-100 shadow-2xl animate-fadeIn">
+            {isSecEnabled('about') && (
+              <a href="#about" onClick={() => setIsMobileMenuOpen(false)} className="block py-2 border-b border-emerald-900/50 hover:text-emerald-400">
+                About Villa
+              </a>
+            )}
+            {isSecEnabled('rooms') && (
+              <a href="#rooms" onClick={() => setIsMobileMenuOpen(false)} className="block py-2 border-b border-emerald-900/50 hover:text-emerald-400">
+                3BHK Villa & Rooms
+              </a>
+            )}
+            {isSecEnabled('experiences') && (
+              <a href="#experiences" onClick={() => setIsMobileMenuOpen(false)} className="block py-2 border-b border-emerald-900/50 hover:text-emerald-400">
+                Night Jungle Safari
+              </a>
+            )}
+            {isSecEnabled('amenities') && (
+              <a href="#amenities" onClick={() => setIsMobileMenuOpen(false)} className="block py-2 border-b border-emerald-900/50 hover:text-emerald-400">
+                Amenities
+              </a>
+            )}
+            {isSecEnabled('gallery') && (
+              <a href="#gallery" onClick={() => setIsMobileMenuOpen(false)} className="block py-2 border-b border-emerald-900/50 hover:text-emerald-400">
+                Photo Gallery
+              </a>
+            )}
+            {isRestaurantActive && (
+              <a href="#restaurant" onClick={() => setIsMobileMenuOpen(false)} className="block py-2 border-b border-emerald-900/50 hover:text-emerald-400">
+                Homely Food
+              </a>
+            )}
+            {isSecEnabled('contact') && (
+              <a href="#contact" onClick={() => setIsMobileMenuOpen(false)} className="block py-2 hover:text-emerald-400">
+                Contact & Location
+              </a>
+            )}
+          </div>
+        )}
       </header>
 
       <main>
@@ -407,6 +572,24 @@ export const LexurForestTheme: React.FC<{ data: PublicSiteData }> = ({ data }) =
           <p className="text-emerald-500">© {new Date().getFullYear()} Lexur Green Serviced Villa. All Rights Reserved.</p>
         </div>
       </footer>
+
+      {/* Mobile Sticky CTA Bar */}
+      <div className="md:hidden fixed bottom-0 left-0 right-0 z-40 bg-[#071F13]/95 backdrop-blur-lg border-t border-emerald-800/80 p-3 flex gap-2 shadow-2xl">
+        <a
+          href={`https://wa.me/${contact?.whatsapp_number || '918078776634'}?text=Hi%20Lexur%20Green,%20I%20want%20to%20enquire%20about%20villa%20booking`}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="flex-1 py-3 bg-[#0F3822] border border-emerald-600/40 text-emerald-300 font-sans font-bold text-xs uppercase tracking-wider rounded-xl flex items-center justify-center gap-1.5"
+        >
+          💬 WhatsApp
+        </a>
+        <button
+          onClick={() => setIsEnquiryModalOpen(true)}
+          className="flex-1 py-3 bg-emerald-600 text-white font-sans font-bold text-xs uppercase tracking-wider rounded-xl shadow-lg flex items-center justify-center gap-1.5"
+        >
+          🏡 Book 3BHK Villa
+        </button>
+      </div>
     </div>
   );
 };

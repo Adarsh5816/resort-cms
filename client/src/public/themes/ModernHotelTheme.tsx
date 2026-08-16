@@ -159,6 +159,36 @@ export const ModernHotelTheme: React.FC<{ data: PublicSiteData }> = ({ data }) =
           </section>
         );
 
+      case 'gallery': {
+        const images = gallery?.images || [];
+        return (
+          <section key={secKey} id="gallery" className="py-20 bg-white text-gray-900">
+            <div className="max-w-7xl mx-auto px-6 space-y-12">
+              <div className="text-center space-y-3">
+                <span className="text-blue-600 font-bold text-xs uppercase tracking-widest">
+                  {subtitle || 'Photo Highlights'}
+                </span>
+                <h2 className="text-3xl font-extrabold text-gray-900">
+                  {title || 'Hotel Photo Gallery'}
+                </h2>
+              </div>
+
+              {images.length > 0 ? (
+                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+                  {images.map((img: any) => (
+                    <div key={img.id} className="rounded-2xl overflow-hidden border border-gray-100 shadow-sm aspect-[4/3]">
+                      <img src={img.image_url} alt={img.title || 'Hotel Photo'} className="w-full h-full object-cover hover:scale-105 transition-transform" />
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <p className="text-center text-gray-400 text-sm italic">Gallery images coming soon.</p>
+              )}
+            </div>
+          </section>
+        );
+      }
+
       case 'contact':
         return (
           <section key={secKey} id="contact" className="py-20 bg-slate-900 text-white">
