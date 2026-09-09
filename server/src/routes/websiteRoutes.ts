@@ -2,6 +2,7 @@ import { Router, Response } from 'express';
 import { getDb } from '../db';
 import { authenticateToken, AuthenticatedRequest } from '../middleware/auth';
 import { enforceTenantIsolation } from '../middleware/tenant';
+import { createBackupSnapshot } from '../db/persistence';
 
 const router = Router();
 router.use(authenticateToken);
@@ -63,6 +64,9 @@ router.put('/profile', async (req: AuthenticatedRequest, res: Response) => {
       [finalTagline, finalShortDesc, finalFullDesc, finalLogo, finalFavicon, finalHeroImage, finalAboutImage, req.tenantResortId]
     );
 
+    // Auto-save persistent backup snapshot
+    createBackupSnapshot().catch(() => {});
+
     res.json({ message: 'Resort profile updated' });
   } catch (err: any) {
     console.error('Update profile error:', err);
@@ -121,6 +125,9 @@ router.put('/theme', async (req: AuthenticatedRequest, res: Response) => {
        WHERE resort_id = ?`,
       [theme_id, primary_color, secondary_color, accent_color, font_family, border_radius, header_style, hero_style, custom_css !== undefined ? custom_css : null, hero_overlay_opacity !== undefined ? hero_overlay_opacity : 0.65, custom_head_code !== undefined ? custom_head_code : null, req.tenantResortId]
     );
+
+    // Auto-save persistent backup snapshot
+    createBackupSnapshot().catch(() => {});
 
     res.json({ message: 'Theme & Custom Code updated successfully', theme_id });
   } catch (err: any) {

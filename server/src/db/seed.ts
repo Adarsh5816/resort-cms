@@ -3,6 +3,8 @@ import { initSchema } from './schema';
 import bcrypt from 'bcryptjs';
 import { v4 as uuidv4 } from 'uuid';
 
+import { createBackupSnapshot, restoreBackupSnapshotIfAvailable } from './persistence';
+
 export async function seedDatabase() {
   await initSchema();
   const db = await getDb();
@@ -11,6 +13,13 @@ export async function seedDatabase() {
   const existingResort = await db.get('SELECT id FROM resorts LIMIT 1');
   if (existingResort) {
     console.log('✅ Database already populated with customer data. Preserving all uploaded images & data.');
+    await createBackupSnapshot();
+    return;
+  }
+
+  // If DB was reset (e.g. Render ephemeral container restart), automatically restore from persistent backup!
+  const restored = await restoreBackupSnapshotIfAvailable();
+  if (restored) {
     return;
   }
 
