@@ -1,0 +1,119 @@
+{
+  "timestamp": "2026-09-14T22:25:00.000Z",
+  "resorts": [
+    {
+      "id": "lexur-resort-001",
+      "name": "Lexur Green Serviced Villa",
+      "slug": "lexur-green",
+      "custom_domain": "www.lexurbooking.in",
+      "status": "active"
+    }
+  ],
+  "users": [
+    {
+      "id": "user-super-admin-001",
+      "email": "adarsh.m.sasi@gmail.com",
+      "password_hash": "$2a$10$wN9a.H7x16fPzKq3R.9e6.8e3B4k.W4e5r.1a2b3c4d5e6f7g8h9i",
+      "name": "Adarsh (Super Admin)",
+      "role": "SUPER_ADMIN",
+      "resort_id": null
+    },
+    {
+      "id": "user-resort-admin-001",
+      "email": "akashvalluvady@gmail.com",
+      "password_hash": "$2a$10$8606778603hashplaceholder",
+      "name": "Akash Valluvady",
+      "role": "RESORT_ADMIN",
+      "resort_id": "lexur-resort-001"
+    }
+  ],
+  "website_settings": [
+    {
+      "id": "settings-001",
+      "resort_id": "lexur-resort-001",
+      "logo_url": null,
+      "favicon_url": null,
+      "hero_image_url": null,
+      "about_image_url": null,
+      "tagline": "3BHK Serviced Villa near Forest Border with Night Jungle Safari",
+      "short_description": "Experience the real feel of being deep into nature right near the forest border in Valluvady, Wayanad.",
+      "full_description": "Lexur Green Serviced Villa is a pristine 3BHK private retreat located in Valluvady, Wayanad right near the forest border. Unwind surrounded by lush greenery, enjoy thrilling Night Jungle Safaris, fully equipped kitchen, secure parking, free Wi-Fi, and delicious homely food prepared on order.",
+      "meta_title": "Lexur Green Serviced Villa | 3BHK Private Villa in Valluvady Wayanad",
+      "meta_description": "Book your stay at Lexur Green Serviced Villa, Valluvady Wayanad. 3BHK Private Villa, Night Jungle Safari, kitchen, homely food & forest views.",
+      "keywords": "lexur green, wayanad serviced villa, valluvady villa, night jungle safari wayanad, 3bhk villa wayanad, homely food stay",
+      "restaurant_enabled": 1,
+      "draft_mode": 0
+    }
+  ],
+  "theme_settings": [
+    {
+      "id": "theme-001",
+      "resort_id": "lexur-resort-001",
+      "theme_id": "lexur-forest",
+      "primary_color": "#0A2E1C",
+      "secondary_color": "#0F3822",
+      "accent_color": "#2E7D52",
+      "font_family": "Merriweather",
+      "border_radius": "0.75rem",
+      "header_style": "emerald-bar",
+      "hero_style": "forest-story",
+      "custom_css": "",
+      "hero_overlay_opacity": 0.65,
+      "custom_head_code": ""
+    }
+  ],
+  "homepage_sections": [
+    { "id": "s-1", "resort_id": "lexur-resort-001", "section_key": "hero", "title": "Lexur Green Serviced Villa", "subtitle": "3BHK Private Villa near Forest Border • Valluvady, Wayanad", "is_enabled": 1, "display_order": 1 },
+    { "id": "s-2", "resort_id": "lexur-resort-001", "section_key": "about", "title": "Nature at Your Doorstep", "subtitle": "Valluvady Forest Sanctuary", "is_enabled": 1, "display_order": 2 },
+    { "id": "s-3", "resort_id": "lexur-resort-001", "section_key": "experiences", "title": "Night Jungle Safari & Forest Trails", "subtitle": "Unforgettable Wilderness Adventures", "is_enabled": 1, "display_order": 3 },
+    { "id": "s-4", "resort_id": "lexur-resort-001", "section_key": "rooms", "title": "Villa & Room Accommodations", "subtitle": "3BHK Private Villa with Modern Amenities", "is_enabled": 1, "display_order": 4 },
+    { "id": "s-5", "resort_id": "lexur-resort-001", "section_key": "amenities", "title": "Villa Facilities & Services", "subtitle": "Kitchen, Parking, Wi-Fi & Homely Food", "is_enabled": 1, "display_order": 5 },
+    { "id": "s-6", "resort_id": "lexur-resort-001", "section_key": "gallery", "title": "Forest & Villa Gallery", "subtitle": "Immerse in Lush Wayanad Greenery", "is_enabled": 1, "display_order": 6 },
+    { "id": "s-7", "resort_id": "lexur-resort-001", "section_key": "restaurant", "title": "Homely Food on Order", "subtitle": "Authentic Kerala Cooking", "is_enabled": 1, "display_order": 7 },
+    { "id": "s-8", "resort_id": "lexur-resort-001", "section_key": "testimonials", "title": "Guest Experiences", "subtitle": "Memories from Forest Border", "is_enabled": 1, "display_order": 8 },
+    { "id": "s-9", "resort_id": "lexur-resort-001", "section_key": "contact", "title": "Reserve Your Stay at Lexur Green", "subtitle": "Valluvady, Wayanad, Kerala", "is_enabled": 1, "display_order": 9 }
+  ],
+  "rooms": [
+    {
+      "id": "room-001",
+      "resort_id": "lexur-resort-001",
+      "name": "Full 3BHK Private Serviced Villa",
+      "slug": "full-3bhk-private-villa",
+      "description": "Entire 3BHK private serviced villa with 3 spacious king bedrooms, attached bathrooms, furnished living room, fully equipped kitchen, private balcony, and direct forest garden view.",
+      "short_description": "Entire 3BHK Villa with Kitchen, Living Room & Forest Garden View.",
+      "price": 6500,
+      "discounted_price": 5999,
+      "max_occupancy": "6 - 10 Guests",
+      "bed_type": "3 King Beds + Sofa Bed",
+      "room_size": "1,800 sq.ft",
+      "primary_image": "https://images.unsplash.com/photo-1580587771525-78b9dba3b914?w=800&q=80",
+      "is_active": 1,
+      "display_order": 1
+    }
+  ],
+  "room_images": [],
+  "amenities": [],
+  "room_amenities": [],
+  "gallery_categories": [],
+  "gallery_images": [],
+  "experiences": [],
+  "attractions": [],
+  "restaurant_items": [],
+  "testimonials": [],
+  "contact_information": [
+    {
+      "id": "contact-001",
+      "resort_id": "lexur-resort-001",
+      "address": "Valluvady, Sulthan Bathery, Wayanad, Kerala, India",
+      "phone": "+91 80787 76634",
+      "whatsapp": "918078776634",
+      "email": "lexurbooking@gmail.com",
+      "google_maps_embed": "https://maps.google.com/?q=Valluvady+Wayanad",
+      "check_in_time": "12:00 PM",
+      "check_out_time": "11:00 AM"
+    }
+  ],
+  "social_links": [],
+  "enquiries": [],
+  "invoices": []
+}
