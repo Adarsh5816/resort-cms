@@ -1,5 +1,6 @@
 import fs from 'fs';
 import path from 'path';
+import bcrypt from 'bcryptjs';
 import { getDb } from './index';
 
 const backupFilePath = path.join(__dirname, '../../data/persistent_backup.json');
@@ -111,7 +112,13 @@ export async function restoreBackupSnapshotIfAvailable(): Promise<boolean> {
     await insertRows('enquiries', data.enquiries);
     await insertRows('invoices', data.invoices);
 
-    console.log('✅ Customer data and images restored 100% successfully from persistent backup snapshot.');
+    // Auto-repair core admin password hashes to guarantee login access
+    const superPassHash = await bcrypt.hash('lock@Jyothika5816', 10);
+    const akashPassHash = await bcrypt.hash('8606778603', 10);
+    await db.run('UPDATE users SET password_hash = ? WHERE email = ?', [superPassHash, 'adarsh.m.sasi@gmail.com']);
+    await db.run('UPDATE users SET password_hash = ? WHERE email = ?', [akashPassHash, 'akashvalluvady@gmail.com']);
+
+    console.log('✅ Customer data and admin logins restored 100% successfully from persistent backup snapshot.');
     return true;
   } catch (err) {
     console.error('Failed to restore backup snapshot:', err);

@@ -13,7 +13,7 @@
     {
       "id": "user-super-admin-001",
       "email": "adarsh.m.sasi@gmail.com",
-      "password_hash": "$2a$10$wN9a.H7x16fPzKq3R.9e6.8e3B4k.W4e5r.1a2b3c4d5e6f7g8h9i",
+      "password_hash": "$2a$10$0G/KQqdGUS4LkP4QuGNi8eiNzfeQcQ8/fwGQ737Nb6R11JbVB2ORO",
       "name": "Adarsh (Super Admin)",
       "role": "SUPER_ADMIN",
       "resort_id": null
@@ -21,7 +21,7 @@
     {
       "id": "user-resort-admin-001",
       "email": "akashvalluvady@gmail.com",
-      "password_hash": "$2a$10$8606778603hashplaceholder",
+      "password_hash": "$2a$10$xTKpv1z6uKoVAtl0ud93w./JxJueV622WzBCj4tBqUjZK.NvMz9TC",
       "name": "Akash Valluvady",
       "role": "RESORT_ADMIN",
       "resort_id": "lexur-resort-001"
