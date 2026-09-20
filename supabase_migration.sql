@@ -311,3 +311,26 @@ VALUES (
   'Valluvady, Sulthan Bathery, Wayanad, Kerala, India',
   'https://maps.google.com/?q=Valluvady+Wayanad'
 );
+
+-- Invoices Table
+CREATE TABLE IF NOT EXISTS invoices (
+  id VARCHAR(36) PRIMARY KEY,
+  resort_id VARCHAR(36) REFERENCES resorts(id) ON DELETE CASCADE,
+  invoice_number VARCHAR(100) UNIQUE NOT NULL,
+  guest_name VARCHAR(255) NOT NULL,
+  guest_email VARCHAR(255),
+  guest_phone VARCHAR(50),
+  room_name VARCHAR(255),
+  check_in_date VARCHAR(50),
+  check_out_date VARCHAR(50),
+  num_nights INT DEFAULT 1,
+  rate_per_night NUMERIC DEFAULT 0,
+  additional_charges NUMERIC DEFAULT 0,
+  tax_amount NUMERIC DEFAULT 0,
+  discount_amount NUMERIC DEFAULT 0,
+  total_amount NUMERIC NOT NULL,
+  payment_status VARCHAR(50) DEFAULT 'PENDING',
+  payment_method VARCHAR(100) DEFAULT 'UPI / GPay',
+  notes TEXT,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
